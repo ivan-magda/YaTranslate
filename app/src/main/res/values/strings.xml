@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">YaTranslate</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+    <!--Bookmark View Pager-->
+    <string name="vp_title_history">History</string>
+    <string name="vp_title_favorites">Favorites</string>
+
+    <!--BottomNavigationView-->
+    <string name="nv_title_translate">Translate</string>
+    <string name="nv_title_bookmarks">Bookmark</string>
 </resources>
