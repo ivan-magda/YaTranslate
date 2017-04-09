@@ -9,13 +9,13 @@
     android:isScrollContainer="false"
     tools:context="com.ivanmagda.yatranslate.fragment.TranslateFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
-            style="@style/TranslateCardView"
+            android:id="@+id/cv_translate_input_container"
+            style="@style/TranslateInputCardView"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="@dimen/card_view_content_padding">
 
@@ -34,11 +34,16 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
-        <TextView
-            android:id="@+id/tv_translate_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin" />
-    </LinearLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_translate_result_container"
+            style="@style/TranslateResultCardView"
+            app:cardPreventCornerOverlap="false"
+            app:contentPadding="@dimen/card_view_content_padding">
+
+            <TextView
+                android:id="@+id/tv_translate_result"
+                style="@style/TranslateResultTextView" />
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
 </ScrollView>

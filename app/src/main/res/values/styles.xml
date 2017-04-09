@@ -10,10 +10,23 @@
 
     <!--Translate Fragment-->
 
-    <style name="TranslateCardView">
+    <style name="TranslateInputCardView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">@dimen/card_view_translate_min_height</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+
+    <style name="TranslateResultCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/card_view_translate_min_height</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_below">@+id/cv_translate_input_container</item>
+        <item name="android:layout_margin">@dimen/activity_horizontal_margin</item>
     </style>
 
     <!--Translate Edit Text style-->
@@ -36,6 +49,13 @@
         <item name="android:layout_marginTop">32dp</item>
         <item name="android:contentDescription">@string/CD_translate</item>
         <item name="android:src">@drawable/ic_translate_holo_light</item>
+    </style>
+
+    <style name="TranslateResultTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <!--Bookmark Fragment-->
