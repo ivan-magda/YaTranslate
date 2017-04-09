@@ -22,13 +22,26 @@
 
 package com.ivanmagda.yatranslate.utils;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public final class FragmentUtils {
 
     private FragmentUtils() {
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(
+                Activity.INPUT_METHOD_SERVICE);
+
+        View currentFocusView = activity.getCurrentFocus();
+        if (currentFocusView != null) {
+            inputMethodManager.hideSoftInputFromWindow(currentFocusView.getWindowToken(), 0);
+        }
     }
 
     public static void setActionBarVisible(FragmentActivity fragmentActivity, boolean visible) {

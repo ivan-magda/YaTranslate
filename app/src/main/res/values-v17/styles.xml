@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--Translate Edit Text style-->
-    <style name="TranslateInputField">
+    <style name="TranslateInputField" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:hint">@string/translate_hint</item>
         <item name="android:inputType">text|textAutoComplete|textMultiLine|textAutoCorrect</item>
-        <item name="android:layout_marginLeft">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginStart">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginRight">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginEnd">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginTop">@dimen/edit_text_vertical_margin</item>
         <item name="android:imeOptions">actionDone</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentTop">true</item>
     </style>
-
 </resources>

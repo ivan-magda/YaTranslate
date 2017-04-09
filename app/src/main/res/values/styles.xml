@@ -10,15 +10,32 @@
 
     <!--Translate Fragment-->
 
-    <style name="TranslateInputField">
+    <style name="TranslateCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/card_view_translate_min_height</item>
+    </style>
+
+    <!--Translate Edit Text style-->
+    <style name="TranslateInputField" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:hint">@string/translate_hint</item>
         <item name="android:inputType">text|textAutoComplete|textMultiLine|textAutoCorrect</item>
-        <item name="android:layout_marginLeft">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginRight">@dimen/edit_text_horizontal_margin</item>
-        <item name="android:layout_marginTop">@dimen/edit_text_vertical_margin</item>
         <item name="android:imeOptions">actionDone</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+
+    <style name="TranslateIBtn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_below">@+id/et_translate_input</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:contentDescription">@string/CD_translate</item>
+        <item name="android:src">@drawable/ic_translate_holo_light</item>
     </style>
 
     <!--Bookmark Fragment-->
@@ -38,5 +55,4 @@
     <style name="CategoryTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
-
 </resources>

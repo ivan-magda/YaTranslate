@@ -8,4 +8,7 @@
 
     <dimen name="tab_indicator_height">4dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="card_view_content_padding">16dp</dimen>
+    <dimen name="card_view_translate_min_height">120dp</dimen>
 </resources>
