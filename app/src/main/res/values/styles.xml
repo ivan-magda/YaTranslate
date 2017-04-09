@@ -8,10 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+    <!--Translate Fragment-->
+
+    <style name="TranslateInputField">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/translate_hint</item>
+        <item name="android:inputType">text|textAutoComplete|textMultiLine|textAutoCorrect</item>
+        <item name="android:layout_marginLeft">@dimen/edit_text_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/edit_text_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/edit_text_vertical_margin</item>
+        <item name="android:imeOptions">actionDone</item>
     </style>
+
+    <!--Bookmark Fragment-->
 
     <!-- Style for a tab that displays a category name -->
     <style name="CategoryTab" parent="Widget.Design.TabLayout">

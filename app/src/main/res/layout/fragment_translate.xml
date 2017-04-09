@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
+    android:id="@+id/fr_translate_root"
     android:name="com.ivanmagda.yatranslate.fragments.TranslateFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.ivanmagda.yatranslate.fragment.TranslateFragment"
-    tools:listitem="@layout/fragment_translate_item" />
+    android:isScrollContainer="false"
+    tools:context="com.ivanmagda.yatranslate.fragment.TranslateFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_translate_input"
+            style="@style/TranslateInputField"
+            android:freezesText="true" />
+    </LinearLayout>
+
+</ScrollView>

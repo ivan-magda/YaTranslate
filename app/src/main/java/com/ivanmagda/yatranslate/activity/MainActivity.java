@@ -1,6 +1,5 @@
 package com.ivanmagda.yatranslate.activity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,16 +7,13 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemSelect
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
-import com.ivanmagda.yatranslate.fragment.dummy.DummyContent;
 
-public class MainActivity extends AppCompatActivity
-        implements TranslateFragment.OnTranslateFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -27,9 +23,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getFragmentTransaction()
-                    .add(R.id.main_container, TranslateFragment.newInstance(), TranslateFragment.TAG)
-                    .commit();
+            setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
         }
 
         initNavigation();
@@ -40,11 +34,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        replaceCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
+                    case R.id.navigation_translate:
+                        setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
                         return true;
-                    case R.id.navigation_dashboard:
-                        replaceCurrentFragment(BookmarkFragment.newInstance(), BookmarkFragment.TAG);
+                    case R.id.navigation_bookmark:
+                        setCurrentFragment(BookmarkFragment.newInstance(), BookmarkFragment.TAG);
                         return true;
                     default:
                         return false;
@@ -56,21 +50,16 @@ public class MainActivity extends AppCompatActivity
         navigation.setOnNavigationItemSelectedListener(listener);
     }
 
-    @SuppressLint("CommitTransaction")
-    private FragmentTransaction getFragmentTransaction() {
-        return getSupportFragmentManager().beginTransaction();
-    }
+    private void setCurrentFragment(Fragment fragment, String fragmentTag) {
+        Fragment addedFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
 
-    private void replaceCurrentFragment(Fragment fragment, String fragmentTag) {
-        if (getSupportFragmentManager().findFragmentByTag(fragmentTag) != null) return;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (addedFragment != null) {
+            transaction.replace(R.id.main_container, addedFragment, addedFragment.getTag());
+        } else {
+            transaction.add(R.id.main_container, fragment, fragmentTag);
+        }
 
-        getFragmentTransaction()
-                .replace(R.id.main_container, fragment, fragmentTag)
-                .commit();
-    }
-
-    @Override
-    public void onListItemInteraction(DummyContent.DummyItem item) {
-        Log.d(TAG, "onListItemInteraction: " + item);
+        transaction.commit();
     }
 }

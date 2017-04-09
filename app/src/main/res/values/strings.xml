@@ -8,4 +8,5 @@
     <!--BottomNavigationView-->
     <string name="nv_title_translate">Translate</string>
     <string name="nv_title_bookmarks">Bookmark</string>
+    <string name="translate_hint">What do you want to translate?</string>
 </resources>

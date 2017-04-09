@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_translate"
         android:icon="@drawable/ic_translate_holo_light"
         android:title="@string/nv_title_translate" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_bookmark"
         android:icon="@drawable/ic_bookmark_holo_light"
         android:title="@string/nv_title_bookmarks" />
 
