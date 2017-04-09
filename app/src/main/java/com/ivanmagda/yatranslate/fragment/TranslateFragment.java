@@ -137,21 +137,11 @@ public class TranslateFragment extends Fragment
             @Override
             public void onClick(View v) {
                 FragmentUtils.hideSoftKeyboard(getActivity());
-                if (!TextUtils.isEmpty(mTranslateInput.getText().toString())) {
-                    queryForTranslate();
-                }
+                if (!TextUtils.isEmpty(mTextToTranslate)) queryForTranslate();
             }
         });
 
         updateResults();
-    }
-
-    private void queryForTranslate() {
-        if (!Utils.isOnline(getContext())) {
-            Toast.makeText(getActivity(), R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
-        } else {
-            getLoaderManager().restartLoader(TRANSLATE_LOADER_ID, null, this);
-        }
     }
 
     @Override
@@ -190,6 +180,14 @@ public class TranslateFragment extends Fragment
     }
 
     // Private helpers.
+
+    private void queryForTranslate() {
+        if (!Utils.isOnline(getContext())) {
+            Toast.makeText(getActivity(), R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
+        } else {
+            getLoaderManager().restartLoader(TRANSLATE_LOADER_ID, null, this);
+        }
+    }
 
     private void updateResults() {
         if (mTranslateResults != null) {
