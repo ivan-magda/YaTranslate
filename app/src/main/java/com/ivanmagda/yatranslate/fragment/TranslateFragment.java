@@ -22,6 +22,7 @@
 
 package com.ivanmagda.yatranslate.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +77,9 @@ public class TranslateFragment extends Fragment
 
     @BindView(R.id.tv_translate_result)
     TextView mTranslateResultTextView;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     private String mTextToTranslate = "";
     private List<TranslateItem> mTranslateResults;
@@ -169,6 +174,9 @@ public class TranslateFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<List<TranslateItem>> loader, List<TranslateItem> translateItems) {
+        mProgressBar.setVisibility(View.GONE);
+        mTranslateButton.setVisibility(View.VISIBLE);
+
         mTranslateResults = translateItems;
         updateResults();
     }
@@ -185,6 +193,8 @@ public class TranslateFragment extends Fragment
         if (!Utils.isOnline(getContext())) {
             Toast.makeText(getActivity(), R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
         } else {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mTranslateButton.setVisibility(View.INVISIBLE);
             getLoaderManager().restartLoader(TRANSLATE_LOADER_ID, null, this);
         }
     }
