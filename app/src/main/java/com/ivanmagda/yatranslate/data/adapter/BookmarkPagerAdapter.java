@@ -1,4 +1,4 @@
-package com.ivanmagda.yatranslate.adapter;
+package com.ivanmagda.yatranslate.data.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

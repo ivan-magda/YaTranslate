@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.data;
+package com.ivanmagda.yatranslate.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

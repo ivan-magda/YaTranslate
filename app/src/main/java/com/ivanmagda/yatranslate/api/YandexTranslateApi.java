@@ -29,8 +29,8 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.core.Resource.Parse;
 import com.ivanmagda.network.helper.MethodParameters;
 import com.ivanmagda.network.helper.UrlBuilder;
-import com.ivanmagda.yatranslate.data.TranslateItem;
-import com.ivanmagda.yatranslate.data.TranslateLangItem;
+import com.ivanmagda.yatranslate.data.model.TranslateItem;
+import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.json.TranslateItemJsonUtils;
 
 import java.net.URL;
@@ -41,8 +41,7 @@ public final class YandexTranslateApi {
     private static final String LOG_TAG = YandexTranslateApi.class.getSimpleName();
 
     // TODO: Replace Yandex Translate API Key with your own.
-    // REPLACE_WITH_YOUR_OWN_API_KEY
-    private static final String API_KEY = "trnsl.1.1.20170325T155033Z.495075cb2e19b514.b7d60e847a917c8a823856985920026ec5c3ede6";
+    private static final String API_KEY = "REPLACE_WITH_YOUR_OWN_API_KEY";
     private static final String API_SCHEME = "https";
     private static final String API_HOST = "translate.yandex.net";
     private static final String API_PATH = "api/v1.5/tr.json";

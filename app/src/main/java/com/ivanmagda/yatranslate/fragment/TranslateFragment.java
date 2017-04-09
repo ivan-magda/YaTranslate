@@ -43,8 +43,8 @@ import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.network.utils.Utils;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
-import com.ivanmagda.yatranslate.data.TranslateItem;
-import com.ivanmagda.yatranslate.data.TranslateLangItem;
+import com.ivanmagda.yatranslate.data.model.TranslateItem;
+import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
 
 import java.util.ArrayList;
