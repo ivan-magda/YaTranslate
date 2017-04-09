@@ -22,7 +22,6 @@
 
 package com.ivanmagda.yatranslate.fragment;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -83,7 +82,7 @@ public class TranslateFragment extends Fragment
 
     private String mTextToTranslate = "";
     private List<TranslateItem> mTranslateResults;
-    private TranslateLangItem mTranslateLang = new TranslateLangItem("en", "ru");
+    private TranslateLangItem mTranslateLang = new TranslateLangItem("en", "ru", "English", "Russian");
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

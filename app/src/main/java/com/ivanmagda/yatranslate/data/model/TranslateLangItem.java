@@ -26,28 +26,38 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public final class TranslateLangItem implements Parcelable {
+import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
-    private static final int FROM_LANG_TRANSLATE_INDEX = 0;
-    private static final int TO_LANG_TRANSLATE_INDEX = 1;
+public final class TranslateLangItem implements Parcelable {
 
     private final String mFromLang;
     private final String mToLang;
 
-    public TranslateLangItem(@NonNull final String lang) {
-        String[] langs = splitLang(lang);
-        this.mFromLang = langs[FROM_LANG_TRANSLATE_INDEX];
-        this.mToLang = langs[TO_LANG_TRANSLATE_INDEX];
+    private String mFromLangName;
+    private String mToLangName;
+
+    public TranslateLangItem(@NonNull final String lang,
+                             @NonNull final String fromLangName,
+                             @NonNull final String toLangName) {
+        this.mFromLang = TranslateLangItemUtils.getFromLangName(lang);
+        this.mToLang = TranslateLangItemUtils.getToLangName(lang);
+        this.mFromLangName = fromLangName;
+        this.mToLangName = toLangName;
     }
 
-    public TranslateLangItem(@NonNull final String fromLang, @NonNull final String toLang) {
+    public TranslateLangItem(@NonNull final String fromLang, @NonNull final String toLang,
+                             @NonNull final String fromLangName, @NonNull final String toLangName) {
         this.mFromLang = fromLang;
         this.mToLang = toLang;
+        this.mFromLangName = fromLangName;
+        this.mToLangName = toLangName;
     }
 
     public TranslateLangItem(Parcel in) {
         this.mFromLang = in.readString();
         this.mToLang = in.readString();
+        this.mFromLangName = in.readString();
+        this.mToLangName = in.readString();
     }
 
     @Override
@@ -59,6 +69,8 @@ public final class TranslateLangItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mFromLang);
         dest.writeString(mToLang);
+        dest.writeString(mFromLangName);
+        dest.writeString(mToLangName);
     }
 
     public static final Creator CREATOR = new Creator<TranslateLangItem>() {
@@ -85,8 +97,12 @@ public final class TranslateLangItem implements Parcelable {
         return mFromLang + "-" + mToLang;
     }
 
-    private static String[] splitLang(@NonNull final String lang) {
-        return lang.split("-");
+    public String getFromLangName() {
+        return mFromLangName;
+    }
+
+    public String getToLangName() {
+        return mToLangName;
     }
 
 }

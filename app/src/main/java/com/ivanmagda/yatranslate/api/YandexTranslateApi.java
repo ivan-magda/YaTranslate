@@ -32,6 +32,7 @@ import com.ivanmagda.network.helper.UrlBuilder;
 import com.ivanmagda.yatranslate.data.model.TranslateItem;
 import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.json.TranslateItemJsonUtils;
+import com.ivanmagda.yatranslate.utils.json.TranslateLangItemJsonUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -57,16 +58,16 @@ public final class YandexTranslateApi {
     /**
      * @return The supported languages Resource.
      */
-    public static Resource<String> getSupportedLanguages() {
+    public static Resource<List<TranslateLangItem>> getSupportedLanguages() {
         MethodParameters parameters = getDefaultMethodParameters();
         parameters.put(UI_LANGUAGE_KEY_PARAM, "en");
 
         URL url = buildUrl(SUPPORTED_LANGUAGES_PATH, parameters);
 
-        return new Resource<>(url, new Parse<String>() {
+        return new Resource<>(url, new Parse<List<TranslateLangItem>>() {
             @Override
-            public String parse(@Nullable String response) {
-                return response;
+            public List<TranslateLangItem> parse(@Nullable String response) {
+                return TranslateLangItemJsonUtils.buildFromResponse(response);
             }
         });
     }
@@ -83,7 +84,7 @@ public final class YandexTranslateApi {
         return new Resource<>(url, new Parse<List<TranslateItem>>() {
             @Override
             public List<TranslateItem> parse(@Nullable String response) {
-                return TranslateItemJsonUtils.buildItemsFromResponseAndSourceText(text, response);
+                return TranslateItemJsonUtils.buildItems(text, translateLang, response);
             }
         });
     }
