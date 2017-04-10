@@ -23,6 +23,14 @@
 package com.ivanmagda.yatranslate.utils;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
+
+import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public final class TranslateLangItemUtils {
 
@@ -39,5 +47,49 @@ public final class TranslateLangItemUtils {
 
     private static String[] splitLang(@NonNull final String lang) {
         return lang.split("-");
+    }
+
+    public static HashMap<String, String> getLangNames(@NonNull final List<TranslateLangItem> langItems) {
+        HashMap<String, String> langNames = new HashMap<>(langItems.size());
+
+        for (TranslateLangItem anItem : langItems) {
+            langNames.put(anItem.getFromLang(), anItem.getFromLangName());
+            langNames.put(anItem.getToLang(), anItem.getToLangName());
+        }
+
+        return langNames;
+    }
+
+    public static Pair<List<String>, HashMap<String, List<String>>> buildMap(
+            @NonNull final List<TranslateLangItem> langItems) {
+        HashSet<String> fromLangsSet = new HashSet<>(langItems.size());
+        HashMap<String, HashSet<String>> toLangsMap = new HashMap<>(langItems.size());
+
+        for (TranslateLangItem anItem : langItems) {
+            String fromLang = anItem.getFromLang();
+            String toLang = anItem.getToLang();
+
+            fromLangsSet.add(anItem.getFromLang());
+
+            if (toLangsMap.get(fromLang) == null) {
+                toLangsMap.put(fromLang, new HashSet<String>(5));
+            }
+
+            toLangsMap.get(fromLang).add(toLang);
+        }
+
+        List<String> fromLangs = new ArrayList<>(fromLangsSet);
+        ListSortUtils.caseInsensitiveSort(fromLangs);
+
+        HashMap<String, List<String>> toLangs = new HashMap<>(toLangsMap.size());
+        for (String key : toLangsMap.keySet()) {
+            HashSet<String> value = toLangsMap.get(key);
+
+            List<String> langsArray = new ArrayList<>(value);
+            ListSortUtils.caseInsensitiveSort(langsArray);
+            toLangs.put(key, langsArray);
+        }
+
+        return new Pair<>(fromLangs, toLangs);
     }
 }

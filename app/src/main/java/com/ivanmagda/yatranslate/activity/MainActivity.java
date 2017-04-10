@@ -23,6 +23,7 @@
 package com.ivanmagda.yatranslate.activity;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -36,12 +37,16 @@ import com.ivanmagda.yatranslate.data.model.TranslateItem;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentResultsListener;
+import com.ivanmagda.yatranslate.utils.ArrayUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnTranslateFragmentResultsListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String TRANSLATE_RESULTS_STATE_KEY = "TRANSLATE_RESULTS_STATE_KEY";
 
     /* Last translate results */
     private List<TranslateItem> mTranslateItems;
@@ -53,9 +58,20 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
 
         if (savedInstanceState == null) {
             setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
+        } else {
+            mTranslateItems = savedInstanceState.getParcelableArrayList(TRANSLATE_RESULTS_STATE_KEY);
         }
 
         initNavigation();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!ArrayUtils.isEmpty(mTranslateItems)) {
+            outState.putParcelableArrayList(TRANSLATE_RESULTS_STATE_KEY,
+                    new ArrayList<Parcelable>(mTranslateItems));
+        }
     }
 
     private void initNavigation() {
@@ -88,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     }
 
     @Override
-    public void onTranslateResult(@Nullable List<TranslateItem> translateItem) {
-        mTranslateItems = translateItem;
+    public void onTranslateResult(@Nullable List<TranslateItem> translateItems) {
+        mTranslateItems = translateItems;
     }
 }

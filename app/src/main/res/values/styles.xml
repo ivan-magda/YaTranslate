@@ -37,7 +37,6 @@
         <item name="android:inputType">text|textAutoComplete|textMultiLine|textAutoCorrect</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentTop">true</item>
     </style>
 
     <style name="TranslateIBtn">
