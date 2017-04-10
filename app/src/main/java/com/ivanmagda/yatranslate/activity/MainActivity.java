@@ -24,6 +24,7 @@ package com.ivanmagda.yatranslate.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.Fragment;
@@ -31,12 +32,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
+import com.ivanmagda.yatranslate.data.model.TranslateItem;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
+import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentResultsListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements OnTranslateFragmentResultsListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    /* Last translate results */
+    private List<TranslateItem> mTranslateItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_translate:
-                        setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
+                        setCurrentFragment(TranslateFragment.newInstance(mTranslateItems),
+                                TranslateFragment.TAG);
                         return true;
                     case R.id.navigation_bookmark:
                         setCurrentFragment(BookmarkFragment.newInstance(), BookmarkFragment.TAG);
@@ -76,5 +85,10 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.main_container, fragment, fragmentTag)
                 .commit();
+    }
+
+    @Override
+    public void onTranslateResult(@Nullable List<TranslateItem> translateItem) {
+        mTranslateItems = translateItem;
     }
 }
