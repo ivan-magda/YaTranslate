@@ -10,6 +10,6 @@
     <string name="nv_title_bookmarks">Bookmark</string>
     <string name="translate_hint">What do you want to translate?</string>
     <string name="CD_translate">Press to translate</string>
-    <string name="no_internet_connection_message">There is no internet connection</string>
+    <string name="msg_no_internet_connection">There is no internet connection</string>
     <string name="msg_failed_translate">Failed to translate. Try again later.</string>
 </resources>

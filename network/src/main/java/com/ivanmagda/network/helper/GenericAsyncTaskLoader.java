@@ -31,16 +31,29 @@ import com.ivanmagda.network.core.Webservice;
 
 public final class GenericAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
 
-    private Resource<T> mResource;
+    /**
+     * Helper interface, that controls whether to start loading.
+     */
+    public interface OnStartLoadingCondition {
+        public boolean isMeetConditions(Resource<?> resource);
+    }
 
-    public GenericAsyncTaskLoader(@NonNull final Context context, @NonNull Resource<T> resource) {
+    private Resource<T> mResource;
+    private OnStartLoadingCondition mLoadingCondition;
+
+    public GenericAsyncTaskLoader(@NonNull final Context context,
+                                  @NonNull final Resource<T> resource,
+                                  @NonNull final OnStartLoadingCondition loadingCondition) {
         super(context);
         this.mResource = resource;
+        this.mLoadingCondition = loadingCondition;
     }
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (mLoadingCondition.isMeetConditions(mResource)) {
+            forceLoad();
+        }
     }
 
     @Override

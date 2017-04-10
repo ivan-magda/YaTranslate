@@ -41,7 +41,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
+import com.ivanmagda.network.helper.GenericAsyncTaskLoader.OnStartLoadingCondition;
 import com.ivanmagda.network.utils.Utils;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
@@ -87,7 +89,7 @@ public class TranslateFragment extends Fragment
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
-    private String mTextToTranslate = "";
+    private String mTextToTranslate;
     private List<TranslateItem> mTranslateResults;
     private TranslateLangItem mTranslateLang = new TranslateLangItem("en", "ru", "English", "Russian");
 
@@ -109,7 +111,7 @@ public class TranslateFragment extends Fragment
     public static TranslateFragment newInstance(@Nullable List<TranslateItem> translateItems) {
         TranslateFragment fragment = new TranslateFragment();
 
-        if (translateItems != null && translateItems.size() > 0) {
+        if (!ArrayUtils.isEmpty(translateItems)) {
             Bundle args = new Bundle();
             args.putParcelableArrayList(ARG_TRANSLATE_RESULT, new ArrayList<Parcelable>(translateItems));
             fragment.setArguments(args);
@@ -207,7 +209,13 @@ public class TranslateFragment extends Fragment
             case TRANSLATE_LOADER_ID:
                 return new GenericAsyncTaskLoader<>(
                         getActivity(),
-                        YandexTranslateApi.getTranslation(mTextToTranslate, mTranslateLang)
+                        YandexTranslateApi.getTranslation(mTextToTranslate, mTranslateLang),
+                        new OnStartLoadingCondition() {
+                            @Override
+                            public boolean isMeetConditions(Resource<?> resource) {
+                                return !TextUtils.isEmpty(mTextToTranslate);
+                            }
+                        }
                 );
             default:
                 throw new IllegalArgumentException("Unsupported loader with id: " + String.valueOf(id));
@@ -230,7 +238,7 @@ public class TranslateFragment extends Fragment
 
     private void queryForTranslate() {
         if (!Utils.isOnline(getContext())) {
-            Toast.makeText(getActivity(), R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
+            showToastWithMessageId(R.string.msg_no_internet_connection);
         } else {
             setLoadingIndicatorVisible(true);
             getLoaderManager().restartLoader(TRANSLATE_LOADER_ID, null, this);
@@ -242,8 +250,8 @@ public class TranslateFragment extends Fragment
         updateResultsMessage();
 
         if (mListener != null) mListener.onTranslateResult(translateItems);
-        if (ArrayUtils.isEmpty(translateItems) && !TextUtils.isEmpty(mTextToTranslate))
-            Toast.makeText(getActivity(), R.string.msg_failed_translate, Toast.LENGTH_SHORT).show();
+        if (ArrayUtils.isEmpty(translateItems))
+            showToastWithMessageId(R.string.msg_failed_translate);
     }
 
     private void updateResultsMessage() {
@@ -266,4 +274,7 @@ public class TranslateFragment extends Fragment
         }
     }
 
+    private void showToastWithMessageId(final int stringResourceId) {
+        Toast.makeText(getActivity(), stringResourceId, Toast.LENGTH_SHORT).show();
+    }
 }
