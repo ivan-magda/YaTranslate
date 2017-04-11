@@ -37,6 +37,32 @@
         <item name="android:inputType">text|textAutoComplete|textMultiLine|textAutoCorrect</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_below">@+id/langs_container</item>
+        <item name="android:layout_marginTop">@dimen/edit_text_vertical_margin</item>
+    </style>
+
+    <style name="TranslateLangsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="TranslateLangButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">.4</item>
+    </style>
+
+    <style name="SwapLangsImageButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_weight">.2</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:src">@drawable/ic_swap_horiz_holo_light</item>
     </style>
 
     <style name="TranslateIBtn">
@@ -47,7 +73,6 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_marginTop">32dp</item>
         <item name="android:src">@drawable/ic_translate_holo_light</item>
-        <item name="android:background">@drawable/ib_swap_lang_select_background</item>
     </style>
 
     <style name="TranslateResultTextView">
@@ -55,6 +80,15 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="TranslateProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignBottom">@id/bt_translate</item>
+        <item name="android:layout_alignTop">@id/bt_translate</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <!--Bookmark Fragment-->

@@ -15,4 +15,5 @@
     <string name="activity_select_lang_title">Select Language</string>
     <string name="activity_translate_title">Translate</string>
     <string name="CD_selected_language">Selected language</string>
+    <string name="CD_swap_languages">Swap languages</string>
 </resources>

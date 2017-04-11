@@ -25,42 +25,27 @@
 
                 <LinearLayout
                     android:id="@+id/langs_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:orientation="horizontal">
+                    style="@style/TranslateLangsContainer">
 
                     <Button
                         android:id="@+id/btn_from_lang"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".4"
-                        tools:text="From lang translate" />
+                        style="@style/TranslateLangButton"
+                        tools:text="From" />
 
                     <ImageButton
                         android:id="@+id/btn_swap_langs"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight=".2"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_swap_horiz_holo_light" />
+                        style="@style/SwapLangsImageButton"
+                        android:contentDescription="@string/CD_swap_languages" />
 
                     <Button
                         android:id="@+id/btn_to_lang"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".4"
-                        tools:text="To lang translate" />
+                        style="@style/TranslateLangButton"
+                        tools:text="To" />
                 </LinearLayout>
 
                 <EditText
                     android:id="@+id/et_translate_input"
-                    style="@style/TranslateInputField"
-                    android:layout_below="@+id/langs_container"
-                    android:layout_marginTop="@dimen/edit_text_vertical_margin" />
+                    style="@style/TranslateInputField" />
 
                 <ImageButton
                     android:id="@+id/bt_translate"
@@ -69,13 +54,7 @@
 
                 <ProgressBar
                     android:id="@+id/progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/bt_translate"
-                    android:layout_alignTop="@id/bt_translate"
-                    android:layout_centerHorizontal="true"
-                    android:indeterminate="true"
-                    android:visibility="gone" />
+                    style="@style/TranslateProgressBar" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
