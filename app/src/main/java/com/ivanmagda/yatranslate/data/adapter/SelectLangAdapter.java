@@ -23,17 +23,20 @@
 package com.ivanmagda.yatranslate.data.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
+import com.ivanmagda.yatranslate.data.SelectLangListItem;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,7 +50,7 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
      * The interface that receives onClick messages.
      */
     public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
+        void onListItemClick(SelectLangListItem selectedListItem);
     }
 
     /*
@@ -56,17 +59,31 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
      */
     final private ListItemClickListener mOnClickListener;
 
-    private List<String> mLangs;
-    private HashMap<String, String> mLangsNames;
+    private List<SelectLangListItem> mLangItems;
+    private String mSelectedLangKey;
 
     /**
      * Constructor for SelectLangAdapter that accepts a list of items to display and the specification
      * for the ListItemClickListener.
      */
+    public SelectLangAdapter(@Nullable List<SelectLangListItem> items,
+                             @NonNull final ListItemClickListener listener) {
+        mOnClickListener = listener;
+        if (ArrayUtils.isEmpty(items)) {
+            mLangItems = new ArrayList<>(30);
+        } else {
+            mLangItems = items;
+        }
+    }
+
     public SelectLangAdapter(@NonNull final ListItemClickListener listener) {
         mOnClickListener = listener;
-        mLangs = new ArrayList<>(10);
-        mLangsNames = new HashMap<>(10);
+        mLangItems = new ArrayList<>(30);
+    }
+
+    public void setSelectedLangKey(String selectedLangKey) {
+        this.mSelectedLangKey = selectedLangKey;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -85,16 +102,14 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
 
     @Override
     public int getItemCount() {
-        return mLangs.size();
+        return mLangItems.size();
     }
 
-    public void updateWithNewData(List<String> newData, HashMap<String, String> langsNames) {
-        mLangs.clear();
-        mLangsNames.clear();
+    public void updateWithNewData(List<SelectLangListItem> newItems) {
+        mLangItems.clear();
 
-        if (!ArrayUtils.isEmpty(newData)) {
-            mLangs.addAll(newData);
-            mLangsNames = langsNames;
+        if (!ArrayUtils.isEmpty(newItems)) {
+            mLangItems = newItems;
         }
 
         notifyDataSetChanged();
@@ -103,6 +118,9 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
     class LangViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tv_lang)
         TextView mLangTextView;
+
+        @BindView(R.id.iv_check)
+        ImageView mCheckImageView;
 
         LangViewHolder(View itemView) {
             super(itemView);
@@ -114,7 +132,7 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mOnClickListener.onListItemClick(clickedPosition);
+            mOnClickListener.onListItemClick(mLangItems.get(clickedPosition));
         }
 
         /**
@@ -124,8 +142,16 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
          * @param listIndex Position of the item in the list
          */
         void bind(int listIndex) {
-            String key = mLangs.get(listIndex);
-            mLangTextView.setText(mLangsNames.get(key));
+            SelectLangListItem item = mLangItems.get(listIndex);
+            mLangTextView.setText(item.getLangName());
+
+            if (!TextUtils.isEmpty(mSelectedLangKey)) {
+                if (mSelectedLangKey.equals(item.getLangKey())) {
+                    mCheckImageView.setVisibility(View.VISIBLE);
+                } else {
+                    mCheckImageView.setVisibility(View.GONE);
+                }
+            }
         }
     }
 }

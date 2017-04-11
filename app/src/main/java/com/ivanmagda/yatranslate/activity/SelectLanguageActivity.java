@@ -22,10 +22,10 @@
 
 package com.ivanmagda.yatranslate.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,16 +34,20 @@ import android.util.Log;
 
 import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
+import com.ivanmagda.yatranslate.Extras;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
+import com.ivanmagda.yatranslate.data.SelectLangListItem;
+import com.ivanmagda.yatranslate.data.SelectLangListItemComparator;
 import com.ivanmagda.yatranslate.data.adapter.SelectLangAdapter;
 import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,11 +67,18 @@ public class SelectLanguageActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     SelectLangAdapter mAdapter;
 
+    private String mSelectedLang;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_lang);
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER)) {
+            mSelectedLang = intent.getStringExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER);
+        }
 
         setup();
 
@@ -83,6 +94,7 @@ public class SelectLanguageActivity extends AppCompatActivity
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mAdapter = new SelectLangAdapter(this);
+        mAdapter.setSelectedLangKey(mSelectedLang);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -102,20 +114,33 @@ public class SelectLanguageActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<List<TranslateLangItem>> loader, List<TranslateLangItem> data) {
-        Pair<List<String>, HashMap<String, List<String>>> langsMap = TranslateLangItemUtils.buildMap(data);
-        HashMap<String, String> langNames = TranslateLangItemUtils.getLangNames(data);
+        //Pair<List<String>, HashMap<String, List<String>>> langsMap = TranslateLangItemUtils.buildMap(data);
+        List<SelectLangListItem> langList = buildLangList(TranslateLangItemUtils.getLangNames(data));
 
-        mAdapter.updateWithNewData(langsMap.first, langNames);
+        mAdapter.updateWithNewData(langList);
     }
 
     @Override
     public void onLoaderReset(Loader<List<TranslateLangItem>> loader) {
-        mAdapter.updateWithNewData(null, null);
+        mAdapter.updateWithNewData(null);
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex) {
-        Log.d(LOG_TAG, "onListItemClick: " + clickedItemIndex);
+    public void onListItemClick(SelectLangListItem selectedListItem) {
+        Log.d(LOG_TAG, "onListItemClick: " + selectedListItem);
     }
 
+    // Private Helpers.
+
+    private static List<SelectLangListItem> buildLangList(HashMap<String, String> langNamesMap) {
+        List<SelectLangListItem> langList = new ArrayList<>(langNamesMap.size());
+
+        for (Map.Entry<String, String> anEntry : langNamesMap.entrySet()) {
+            langList.add(new SelectLangListItem(anEntry.getKey(), anEntry.getValue()));
+        }
+
+        Collections.sort(langList, new SelectLangListItemComparator());
+
+        return langList;
+    }
 }

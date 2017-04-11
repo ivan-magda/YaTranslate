@@ -48,6 +48,7 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader.OnStartLoadingCondition;
 import com.ivanmagda.network.utils.Utils;
+import com.ivanmagda.yatranslate.Extras;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
@@ -86,17 +87,25 @@ public class TranslateFragment extends Fragment
     private static final String TRANSLATE_RESULT_STATE_KEY = "TRANSLATE_RESULT_STATE_KEY";
     private static final String TRANSLATE_LANG_STATE_KEY = "TRANSLATE_LANG_STATE_KEY";
 
-    @BindView(R.id.btn_from_lang) Button mFromLangButton;
-    @BindView(R.id.btn_swap_langs) ImageButton mSwapLangsButton;
-    @BindView(R.id.btn_to_lang) Button mToLangButton;
+    @BindView(R.id.btn_from_lang)
+    Button mFromLangButton;
+    @BindView(R.id.btn_swap_langs)
+    ImageButton mSwapLangsButton;
+    @BindView(R.id.btn_to_lang)
+    Button mToLangButton;
 
-    @BindView(R.id.et_translate_input) EditText mTranslateInput;
-    @BindView(R.id.bt_translate) ImageButton mTranslateButton;
+    @BindView(R.id.et_translate_input)
+    EditText mTranslateInput;
+    @BindView(R.id.bt_translate)
+    ImageButton mTranslateButton;
 
-    @BindView(R.id.cv_translate_result_container) CardView mTranslateResultsContainer;
-    @BindView(R.id.tv_translate_result) TextView mTranslateResultTextView;
+    @BindView(R.id.cv_translate_result_container)
+    CardView mTranslateResultsContainer;
+    @BindView(R.id.tv_translate_result)
+    TextView mTranslateResultTextView;
 
-    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     private String mTextToTranslate;
     private List<TranslateItem> mTranslateResults;
@@ -193,19 +202,33 @@ public class TranslateFragment extends Fragment
             }
         });
 
-        OnClickListener onClickListener = new OnClickListener() {
+        mFromLangButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
-                startActivity(intent);
+                selectLang(true);
             }
-        };
-
-        mFromLangButton.setOnClickListener(onClickListener);
-        mToLangButton.setOnClickListener(onClickListener);
+        });
+        mToLangButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectLang(false);
+            }
+        });
 
         updateLangButtons();
         updateResultsMessage();
+    }
+
+    private void selectLang(boolean selectFromLang) {
+        Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
+
+        if (selectFromLang) {
+            intent.putExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER, mTranslateLang.getFromLang());
+        } else {
+            intent.putExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER, mTranslateLang.getToLang());
+        }
+
+        startActivity(intent);
     }
 
     @Override
