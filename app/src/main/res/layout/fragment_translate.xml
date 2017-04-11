@@ -40,12 +40,12 @@
                         tools:text="From lang translate" />
 
                     <ImageButton
-                        android:layout_gravity="center"
-                        android:background="@android:color/transparent"
                         android:id="@+id/btn_swap_langs"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight=".2"
+                        android:background="@android:color/transparent"
                         android:src="@drawable/ic_swap_horiz_holo_light" />
 
                     <Button
@@ -65,7 +65,7 @@
                 <ImageButton
                     android:id="@+id/bt_translate"
                     style="@style/TranslateIBtn"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="@string/CD_translate" />
 
                 <ProgressBar
                     android:id="@+id/progress_bar"

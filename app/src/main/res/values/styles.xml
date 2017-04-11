@@ -46,8 +46,8 @@
         <item name="android:layout_below">@+id/et_translate_input</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_marginTop">32dp</item>
-        <item name="android:contentDescription">@string/CD_translate</item>
         <item name="android:src">@drawable/ic_translate_holo_light</item>
+        <item name="android:background">@drawable/ib_swap_lang_select_background</item>
     </style>
 
     <style name="TranslateResultTextView">

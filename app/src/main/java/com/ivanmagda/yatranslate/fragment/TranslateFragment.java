@@ -194,6 +194,14 @@ public class TranslateFragment extends Fragment
             }
         });
 
+        mSwapLangsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTranslateLang.swap();
+                updateLangButtons();
+            }
+        });
+
         mTranslateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

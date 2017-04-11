@@ -30,8 +30,8 @@ import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
 public final class TranslateLangItem implements Parcelable {
 
-    private final String mFromLang;
-    private final String mToLang;
+    private String mFromLang;
+    private String mToLang;
 
     private String mFromLangName;
     private String mToLangName;
@@ -105,4 +105,22 @@ public final class TranslateLangItem implements Parcelable {
         return mToLangName;
     }
 
+    public void swap() {
+        swapLangKeys();
+        swapLangNames();
+    }
+
+    // Private Helpers.
+
+    private void swapLangKeys() {
+        String temp = mFromLang;
+        mFromLang = mToLang;
+        mToLang = temp;
+    }
+
+    private void swapLangNames() {
+        String temp = mFromLangName;
+        mFromLangName = mToLangName;
+        mToLangName = temp;
+    }
 }
