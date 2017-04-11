@@ -20,20 +20,32 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate;
+package com.ivanmagda.yatranslate.utils;
 
-/**
- * Provide extra constants for Intents.
- */
-public final class Extras {
+import java.util.HashMap;
+import java.util.Map;
 
-    /**
-     * SelectLanguageActivity constants.
-     */
-    public static final String EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER = "com.ivanmagda.yatranslate.extra_select_lang_activity_mode";
-    public static final String EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER = "com.ivanmagda.yatranslate.extra_lang_item_tarnsfer";
-    public static final String EXTRA_SELECT_LANGUAGE_RESULT = "com.ivanmagda.yatranslate.extra_select_lang_result";
+public final class MapUtils {
 
-    private Extras() {
+    public interface OnFilterCondition<K, V> {
+        boolean isMeetCondition(K key, V value);
+    }
+
+    public static <K, V> Map<K, V> filter(Map<K, V> map, OnFilterCondition condition) {
+        if (map == null) return null;
+        if (map.size() == 0) return map;
+
+        Map<K, V> filteredMap = new HashMap<>(map.size());
+
+        for (Map.Entry<K, V> anEntry : map.entrySet()) {
+            if (condition.isMeetCondition(anEntry.getKey(), anEntry.getValue())) {
+                filteredMap.put(anEntry.getKey(), anEntry.getValue());
+            }
+        }
+
+        return filteredMap;
+    }
+
+    private MapUtils() {
     }
 }

@@ -48,7 +48,6 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader.OnStartLoadingCondition;
 import com.ivanmagda.network.utils.Utils;
-import com.ivanmagda.yatranslate.Extras;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
@@ -63,10 +62,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
+import static com.ivanmagda.yatranslate.Extras.EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER;
+import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER;
+import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 
 public class TranslateFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<List<TranslateItem>> {
@@ -82,10 +85,15 @@ public class TranslateFragment extends Fragment
      */
     private static final int TRANSLATE_LOADER_ID = 101;
 
-    private static final String ARG_TRANSLATE_RESULT = "ARG_TRANSLATE_RESULT";
-    private static final String TRANSLATE_INPUT_STATE_KEY = "TRANSLATE_INPUT_STATE_KEY";
-    private static final String TRANSLATE_RESULT_STATE_KEY = "TRANSLATE_RESULT_STATE_KEY";
-    private static final String TRANSLATE_LANG_STATE_KEY = "TRANSLATE_LANG_STATE_KEY";
+    /**
+     * The request code for language selection.
+     */
+    private static final int SELECT_LANGUAGE_REQUEST = 1;
+
+    private static final String ARG_TRANSLATE_RESULT = "translate-result";
+    private static final String TRANSLATE_INPUT_STATE_KEY = "state-translate-input";
+    private static final String TRANSLATE_RESULT_STATE_KEY = "state-translate-results";
+    private static final String TRANSLATE_LANG_STATE_KEY = "state-translate-lang";
 
     @BindView(R.id.btn_from_lang)
     Button mFromLangButton;
@@ -109,7 +117,7 @@ public class TranslateFragment extends Fragment
 
     private String mTextToTranslate;
     private List<TranslateItem> mTranslateResults;
-    private TranslateLangItem mTranslateLang = new TranslateLangItem("en", "ru", "English", "Russian");
+    private TranslateLangItem mTranslateLang = TranslateLangItem.defaultItem;
 
     private OnTranslateFragmentResultsListener mListener;
 
@@ -164,6 +172,18 @@ public class TranslateFragment extends Fragment
         }
 
         getLoaderManager().initLoader(TRANSLATE_LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SELECT_LANGUAGE_REQUEST && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(EXTRA_SELECT_LANGUAGE_RESULT)) {
+                mTranslateLang = data.getParcelableExtra(EXTRA_SELECT_LANGUAGE_RESULT);
+                updateLangButtons();
+            }
+        }
     }
 
     @Override
@@ -228,15 +248,16 @@ public class TranslateFragment extends Fragment
     }
 
     private void selectLang(boolean selectFromLang) {
-        Intent intent = new Intent(getActivity(), SelectLanguageActivity.class);
+        Intent selectLangIntent = new Intent(getActivity(), SelectLanguageActivity.class);
 
-        if (selectFromLang) {
-            intent.putExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER, mTranslateLang.getFromLang());
-        } else {
-            intent.putExtra(Extras.EXTRA_SELECTED_LANGUAGE_KEY_TRANSFER, mTranslateLang.getToLang());
-        }
+        selectLangIntent.putExtra(EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER, mTranslateLang);
 
-        startActivity(intent);
+        int selectionMode = selectFromLang
+                ? SelectLanguageActivity.SELECT_FROM_LANG_MODE
+                : SelectLanguageActivity.SELECT_TO_LANG_MODE;
+        selectLangIntent.putExtra(EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER, selectionMode);
+
+        startActivityForResult(selectLangIntent, SELECT_LANGUAGE_REQUEST);
     }
 
     @Override

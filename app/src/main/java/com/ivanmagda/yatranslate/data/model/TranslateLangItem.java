@@ -36,6 +36,8 @@ public final class TranslateLangItem implements Parcelable {
     private String mFromLangName;
     private String mToLangName;
 
+    public static TranslateLangItem defaultItem = new TranslateLangItem("en", "ru", "English", "Russian");
+
     public TranslateLangItem(@NonNull final String lang,
                              @NonNull final String fromLangName,
                              @NonNull final String toLangName) {
@@ -103,6 +105,22 @@ public final class TranslateLangItem implements Parcelable {
 
     public String getToLangName() {
         return mToLangName;
+    }
+
+    public void setFromLang(String fromLang) {
+        this.mFromLang = fromLang;
+    }
+
+    public void setToLang(String toLang) {
+        this.mToLang = toLang;
+    }
+
+    public void setFromLangName(String fromLangName) {
+        this.mFromLangName = fromLangName;
+    }
+
+    public void setToLangName(String toLangName) {
+        this.mToLangName = toLangName;
     }
 
     public void swap() {

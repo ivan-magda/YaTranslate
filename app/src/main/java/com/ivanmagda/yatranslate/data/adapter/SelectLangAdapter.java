@@ -86,6 +86,10 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
         notifyDataSetChanged();
     }
 
+    public List<SelectLangListItem> getLangItems() {
+        return new ArrayList<>(mLangItems);
+    }
+
     @Override
     public LangViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View listView = LayoutInflater.from(viewGroup.getContext())
