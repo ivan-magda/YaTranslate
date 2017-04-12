@@ -25,7 +25,7 @@ package com.ivanmagda.yatranslate.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -50,6 +50,7 @@ import com.ivanmagda.network.utils.Utils;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
+import com.ivanmagda.yatranslate.data.TranslateFragmentState;
 import com.ivanmagda.yatranslate.data.model.TranslateItem;
 import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.AlertUtils;
@@ -74,8 +75,12 @@ import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 public class TranslateFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<List<TranslateItem>> {
 
-    public interface OnTranslateFragmentResultsListener {
-        void onTranslateResult(@Nullable List<TranslateItem> translateItem);
+    /**
+     * TranslateFragment interface that helps to save and then restore
+     * TranslateFragment state.
+     */
+    public interface OnTranslateFragmentStateListener {
+        void onSaveState(@NonNull final TranslateFragmentState fragmentState);
     }
 
     public static final String TAG = TranslateFragment.class.getSimpleName();
@@ -90,36 +95,34 @@ public class TranslateFragment extends Fragment
      */
     private static final int SELECT_LANGUAGE_REQUEST = 1;
 
-    private static final String ARG_TRANSLATE_RESULT = "translate-result";
-    private static final String TRANSLATE_INPUT_STATE_KEY = "state-translate-input";
-    private static final String TRANSLATE_RESULT_STATE_KEY = "state-translate-results";
-    private static final String TRANSLATE_LANG_STATE_KEY = "state-translate-lang";
+    private static final String ARG_TRANSLATE_FRAGMENT_STATE = "arg-translate-fragment-state";
+    private static final String TRANSLATE_FRAGMENT_STATE_KEY = "state-translate";
 
-    @BindView(R.id.btn_from_lang)
-    Button mFromLangButton;
-    @BindView(R.id.btn_swap_langs)
-    ImageButton mSwapLangsButton;
-    @BindView(R.id.btn_to_lang)
-    Button mToLangButton;
+    @BindView(R.id.btn_from_lang) Button mFromLangButton;
+    @BindView(R.id.btn_swap_langs) ImageButton mSwapLangsButton;
+    @BindView(R.id.btn_to_lang) Button mToLangButton;
 
-    @BindView(R.id.et_translate_input)
-    EditText mTranslateInput;
-    @BindView(R.id.bt_translate)
-    ImageButton mTranslateButton;
+    @BindView(R.id.et_translate_input) EditText mTranslateInput;
+    @BindView(R.id.bt_translate) ImageButton mTranslateButton;
 
-    @BindView(R.id.cv_translate_result_container)
-    CardView mTranslateResultsContainer;
-    @BindView(R.id.tv_translate_result)
-    TextView mTranslateResultTextView;
+    @BindView(R.id.cv_translate_result_container) CardView mTranslateResultsContainer;
+    @BindView(R.id.tv_translate_result) TextView mTranslateResultTextView;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
-    private String mTextToTranslate;
-    private List<TranslateItem> mTranslateResults;
-    private TranslateLangItem mTranslateLang = TranslateLangItem.defaultItem;
+    /**
+     * An wrapper around translate flow items:
+     * - text to translate;
+     * - translate languages (source and destination);
+     * - translate query results;
+     */
+    private TranslateFragmentState mState;
 
-    private OnTranslateFragmentResultsListener mListener;
+    /**
+     * Listener that helps save TranslateFragment state when it's
+     * about to be destroyed.
+     */
+    private OnTranslateFragmentStateListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -134,14 +137,12 @@ public class TranslateFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
-    public static TranslateFragment newInstance(@Nullable List<TranslateItem> translateItems) {
+    public static TranslateFragment newInstance(@NonNull TranslateFragmentState fragmentState) {
         TranslateFragment fragment = new TranslateFragment();
 
-        if (!ArrayUtils.isEmpty(translateItems)) {
-            Bundle args = new Bundle();
-            args.putParcelableArrayList(ARG_TRANSLATE_RESULT, new ArrayList<Parcelable>(translateItems));
-            fragment.setArguments(args);
-        }
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_TRANSLATE_FRAGMENT_STATE, fragmentState);
+        fragment.setArguments(args);
 
         return fragment;
     }
@@ -149,8 +150,8 @@ public class TranslateFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnTranslateFragmentResultsListener) {
-            mListener = (OnTranslateFragmentResultsListener) context;
+        if (context instanceof OnTranslateFragmentStateListener) {
+            mListener = (OnTranslateFragmentStateListener) context;
         }
     }
 
@@ -159,16 +160,12 @@ public class TranslateFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mTextToTranslate = savedInstanceState.getString(TRANSLATE_INPUT_STATE_KEY);
-            mTranslateResults = savedInstanceState.getParcelableArrayList(TRANSLATE_RESULT_STATE_KEY);
-            mTranslateLang = savedInstanceState.getParcelable(TRANSLATE_LANG_STATE_KEY);
+            mState = savedInstanceState.getParcelable(TRANSLATE_FRAGMENT_STATE_KEY);
         } else if (getArguments() != null) {
-            mTranslateResults = getArguments().getParcelableArrayList(ARG_TRANSLATE_RESULT);
-            if (!ArrayUtils.isEmpty(mTranslateResults)) {
-                TranslateItem translateItem = mTranslateResults.get(0);
-                mTextToTranslate = translateItem.getTextToTranslate();
-                mTranslateLang = translateItem.getTranslateLangItem();
-            }
+            mState = getArguments().getParcelable(ARG_TRANSLATE_FRAGMENT_STATE);
+        } else {
+            mState = new TranslateFragmentState(null, new ArrayList<TranslateItem>(),
+                    TranslateLangItem.defaultItem);
         }
 
         getLoaderManager().initLoader(TRANSLATE_LOADER_ID, null, this);
@@ -180,7 +177,8 @@ public class TranslateFragment extends Fragment
 
         if (requestCode == SELECT_LANGUAGE_REQUEST && resultCode == RESULT_OK) {
             if (data != null && data.hasExtra(EXTRA_SELECT_LANGUAGE_RESULT)) {
-                mTranslateLang = data.getParcelableExtra(EXTRA_SELECT_LANGUAGE_RESULT);
+                mState.setTranslateLangs((TranslateLangItem)
+                        data.getParcelableExtra(EXTRA_SELECT_LANGUAGE_RESULT));
                 updateLangButtons();
             }
         }
@@ -199,7 +197,7 @@ public class TranslateFragment extends Fragment
 
     private void setup() {
         mTranslateInput.requestFocus();
-        mTranslateInput.setText(mTextToTranslate);
+        mTranslateInput.setText(mState.getTextToTranslate());
         mTranslateInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -211,14 +209,14 @@ public class TranslateFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable s) {
-                mTextToTranslate = s.toString();
+                mState.setTextToTranslate(s.toString());
             }
         });
 
         mSwapLangsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTranslateLang.swap();
+                mState.getTranslateLangs().swap();
                 updateLangButtons();
             }
         });
@@ -248,10 +246,17 @@ public class TranslateFragment extends Fragment
         updateResultsMessage();
     }
 
+    /**
+     * Helper function for starting SelectLanguageActivity for a result.
+     *
+     * @param selectFromLang defines what language we want to select.
+     *                       If true => select source lang (from what we want translate).
+     *                       If false => select destination lang (to what we want translate).
+     */
     private void selectLang(boolean selectFromLang) {
         Intent selectLangIntent = new Intent(getActivity(), SelectLanguageActivity.class);
 
-        selectLangIntent.putExtra(EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER, mTranslateLang);
+        selectLangIntent.putExtra(EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER, mState.getTranslateLangs());
 
         int selectionMode = selectFromLang
                 ? SelectLanguageActivity.SELECT_FROM_LANG_MODE
@@ -264,16 +269,17 @@ public class TranslateFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putString(TRANSLATE_INPUT_STATE_KEY, mTextToTranslate);
-        outState.putParcelableArrayList(TRANSLATE_RESULT_STATE_KEY,
-                mTranslateResults != null ? new ArrayList<Parcelable>(mTranslateResults) : null);
-        outState.putParcelable(TRANSLATE_LANG_STATE_KEY, mTranslateLang);
+        outState.putParcelable(TRANSLATE_FRAGMENT_STATE_KEY, mState);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+        if (mListener != null){
+            mListener.onSaveState(mState);
+        }
+
         mListener = null;
     }
 
@@ -283,11 +289,14 @@ public class TranslateFragment extends Fragment
             case TRANSLATE_LOADER_ID:
                 return new GenericAsyncTaskLoader<>(
                         getActivity(),
-                        YandexTranslateApi.getTranslation(mTextToTranslate, mTranslateLang),
+                        YandexTranslateApi.getTranslation(
+                                mState.getTextToTranslate(),
+                                mState.getTranslateLangs()
+                        ),
                         new OnStartLoadingCondition() {
                             @Override
                             public boolean isMeetConditions(Resource<?> resource) {
-                                return !TextUtils.isEmpty(mTextToTranslate);
+                                return !TextUtils.isEmpty(mState.getTextToTranslate());
                             }
                         }
                 );
@@ -304,7 +313,7 @@ public class TranslateFragment extends Fragment
 
     @Override
     public void onLoaderReset(Loader<List<TranslateItem>> loader) {
-        mTranslateResults = null;
+        mState.setTranslateResults(null);
         updateResultsMessage();
     }
 
@@ -313,9 +322,9 @@ public class TranslateFragment extends Fragment
     private void queryForTranslate() {
         if (!Utils.isOnline(getContext())) {
             AlertUtils.showToast(getActivity(), R.string.msg_no_internet_connection);
-        } else if (!mTranslateLang.isValid()) {
+        } else if (!mState.getTranslateLangs().isValid()) {
             AlertUtils.showToast(getActivity(), R.string.msg_language_translate_invalid);
-        } else if (TextUtils.isEmpty(mTextToTranslate)) {
+        } else if (TextUtils.isEmpty(mState.getTextToTranslate())) {
             AlertUtils.showToast(getActivity(), R.string.msg_empty_text);
         } else {
             setLoadingIndicatorVisible(true);
@@ -324,25 +333,26 @@ public class TranslateFragment extends Fragment
     }
 
     private void onTranslateResults(@Nullable List<TranslateItem> translateItems) {
-        mTranslateResults = translateItems;
+        mState.setTranslateResults(translateItems);
         updateResultsMessage();
 
-        if (mListener != null) mListener.onTranslateResult(translateItems);
-        if (ArrayUtils.isEmpty(translateItems))
+        if (ArrayUtils.isEmpty(mState.getTranslateResults())) {
             AlertUtils.showToast(getActivity(), R.string.msg_failed_translate);
+        }
     }
 
     private void updateLangButtons() {
-        mFromLangButton.setText(mTranslateLang.getFromLangName());
-        mToLangButton.setText(mTranslateLang.getToLangName());
+        TranslateLangItem langItem = mState.getTranslateLangs();
+        mFromLangButton.setText(langItem.getFromLangName());
+        mToLangButton.setText(langItem.getToLangName());
     }
 
     private void updateResultsMessage() {
-        if (mTranslateResults != null) {
+        if (!ArrayUtils.isEmpty(mState.getTranslateResults())) {
             mTranslateResultsContainer.setVisibility(View.VISIBLE);
 
             StringBuilder stringBuilder = new StringBuilder(100);
-            for (TranslateItem translateItem : mTranslateResults) {
+            for (TranslateItem translateItem : mState.getTranslateResults()) {
                 stringBuilder.append(translateItem.getTranslatedText()).append("\n");
             }
 

@@ -23,9 +23,7 @@
 package com.ivanmagda.yatranslate.activity;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.Fragment;
@@ -33,23 +31,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.data.model.TranslateItem;
+import com.ivanmagda.yatranslate.data.TranslateFragmentState;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
-import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentResultsListener;
-import com.ivanmagda.yatranslate.utils.ArrayUtils;
+import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentStateListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements OnTranslateFragmentResultsListener {
+public class MainActivity extends AppCompatActivity implements OnTranslateFragmentStateListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String TRANSLATE_RESULTS_STATE_KEY = "TRANSLATE_RESULTS_STATE_KEY";
+    private static final String TRANSLATE_FRAGMENT_STATE_KEY = "TRANSLATE_FRAGMENT_STATE_KEY";
 
-    /* Last translate results */
-    private List<TranslateItem> mTranslateItems;
+    private TranslateFragmentState mTranslateFragmentState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
         if (savedInstanceState == null) {
             setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
         } else {
-            mTranslateItems = savedInstanceState.getParcelableArrayList(TRANSLATE_RESULTS_STATE_KEY);
+            mTranslateFragmentState = savedInstanceState.getParcelable(TRANSLATE_FRAGMENT_STATE_KEY);
         }
 
         initNavigation();
@@ -68,10 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (!ArrayUtils.isEmpty(mTranslateItems)) {
-            outState.putParcelableArrayList(TRANSLATE_RESULTS_STATE_KEY,
-                    new ArrayList<Parcelable>(mTranslateItems));
-        }
+        outState.putParcelable(TRANSLATE_FRAGMENT_STATE_KEY, mTranslateFragmentState);
     }
 
     private void initNavigation() {
@@ -80,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_translate:
-                        setCurrentFragment(TranslateFragment.newInstance(mTranslateItems),
+                        setCurrentFragment(TranslateFragment.newInstance(mTranslateFragmentState),
                                 TranslateFragment.TAG);
                         return true;
                     case R.id.navigation_bookmark:
@@ -104,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     }
 
     @Override
-    public void onTranslateResult(@Nullable List<TranslateItem> translateItems) {
-        mTranslateItems = translateItems;
+    public void onSaveState(@NonNull TranslateFragmentState fragmentState) {
+        mTranslateFragmentState = fragmentState;
     }
 }
