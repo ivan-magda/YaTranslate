@@ -42,7 +42,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
@@ -53,6 +52,7 @@ import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
 import com.ivanmagda.yatranslate.data.model.TranslateItem;
 import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.utils.AlertUtils;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
 
@@ -226,7 +226,7 @@ public class TranslateFragment extends Fragment
             @Override
             public void onClick(View v) {
                 FragmentUtils.hideSoftKeyboard(getActivity());
-                if (!TextUtils.isEmpty(mTextToTranslate)) queryForTranslate();
+                queryForTranslate();
             }
         });
 
@@ -311,7 +311,11 @@ public class TranslateFragment extends Fragment
 
     private void queryForTranslate() {
         if (!Utils.isOnline(getContext())) {
-            showToastWithMessageId(R.string.msg_no_internet_connection);
+            AlertUtils.showToast(getActivity(), R.string.msg_no_internet_connection);
+        } else if (!mTranslateLang.isValid()) {
+            AlertUtils.showToast(getActivity(), R.string.msg_language_translate_invalid);
+        } else if (TextUtils.isEmpty(mTextToTranslate)) {
+            AlertUtils.showToast(getActivity(), R.string.msg_empty_text);
         } else {
             setLoadingIndicatorVisible(true);
             getLoaderManager().restartLoader(TRANSLATE_LOADER_ID, null, this);
@@ -324,7 +328,7 @@ public class TranslateFragment extends Fragment
 
         if (mListener != null) mListener.onTranslateResult(translateItems);
         if (ArrayUtils.isEmpty(translateItems))
-            showToastWithMessageId(R.string.msg_failed_translate);
+            AlertUtils.showToast(getActivity(), R.string.msg_failed_translate);
     }
 
     private void updateLangButtons() {
@@ -355,9 +359,5 @@ public class TranslateFragment extends Fragment
             mProgressBar.setVisibility(GONE);
             mTranslateButton.setVisibility(VISIBLE);
         }
-    }
-
-    private void showToastWithMessageId(final int stringResourceId) {
-        Toast.makeText(getActivity(), stringResourceId, Toast.LENGTH_SHORT).show();
     }
 }

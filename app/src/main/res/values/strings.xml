@@ -1,5 +1,11 @@
 <resources>
+    <!--App and Activity titles-->
     <string name="app_name">YaTranslate</string>
+    <string name="activity_select_lang_title">Select Language</string>
+    <string name="activity_translate_title">Translate</string>
+
+    <!--TranslateFragment-->
+    <string name="translate_hint">Enter text</string>
 
     <!--Bookmark View Pager-->
     <string name="vp_title_history">History</string>
@@ -8,12 +14,15 @@
     <!--BottomNavigationView-->
     <string name="nv_title_translate">Translate</string>
     <string name="nv_title_bookmarks">Bookmark</string>
-    <string name="translate_hint">Enter text</string>
+
+    <!--Content Descriptions-->
     <string name="CD_translate">Press to translate</string>
-    <string name="msg_no_internet_connection">There is no internet connection</string>
-    <string name="msg_failed_translate">Failed to translate. Try again later.</string>
-    <string name="activity_select_lang_title">Select Language</string>
-    <string name="activity_translate_title">Translate</string>
     <string name="CD_selected_language">Selected language</string>
     <string name="CD_swap_languages">Swap languages</string>
+
+    <!--Alert Messages-->
+    <string name="msg_failed_translate">Failed to translate. Try again later.</string>
+    <string name="msg_no_internet_connection">There is no internet connection</string>
+    <string name="msg_empty_text">Please enter text to translate</string>
+    <string name="msg_language_translate_invalid">Please select translate languages</string>
 </resources>

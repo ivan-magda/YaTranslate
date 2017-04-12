@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--App Theme Colors-->
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorLightPrimary">#C8E6C9</color>
     <color name="colorAccent">#FFC107</color>
+
+    <!--Text Colors-->
     <color name="colorText">#FFFFFF</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#757575</color>
+
+    <!--Other-->
     <color name="colorDivided">#BDBDBD</color>
 </resources>

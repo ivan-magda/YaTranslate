@@ -6,7 +6,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
-        style="@style/CategoryTab"
+        style="@style/BookmarkTab"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
 

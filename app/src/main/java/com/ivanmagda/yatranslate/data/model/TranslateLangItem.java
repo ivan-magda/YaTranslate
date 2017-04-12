@@ -25,6 +25,7 @@ package com.ivanmagda.yatranslate.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
@@ -121,6 +122,10 @@ public final class TranslateLangItem implements Parcelable {
 
     public void setToLangName(String toLangName) {
         this.mToLangName = toLangName;
+    }
+
+    public boolean isValid() {
+        return !(TextUtils.isEmpty(mFromLang) || TextUtils.isEmpty(mToLang));
     }
 
     public void swap() {
