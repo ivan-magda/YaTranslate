@@ -12,6 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name=".data.TranslateProvider"
+            android:authorities="com.ivanmagda.yatranslate"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/activity_translate_title"
@@ -22,11 +29,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.SelectLanguageActivity"
             android:label="@string/activity_select_lang_title"
             android:parentActivityName=".activity.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />

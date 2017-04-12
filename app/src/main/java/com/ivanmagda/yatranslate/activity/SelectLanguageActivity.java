@@ -23,25 +23,25 @@
 package com.ivanmagda.yatranslate.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.ivanmagda.network.core.Resource;
-import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.api.YandexTranslateApi;
+import com.ivanmagda.yatranslate.adapter.SelectLangAdapter;
+import com.ivanmagda.yatranslate.api.YandexLangLoader;
+import com.ivanmagda.yatranslate.data.TranslateLanguagesDbLoader;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
 import com.ivanmagda.yatranslate.model.SelectLangListItemComparator;
-import com.ivanmagda.yatranslate.adapter.SelectLangAdapter;
 import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils.OnFilterCondition;
+import com.ivanmagda.yatranslate.utils.TranslateLangDbUtils;
 import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 import static com.ivanmagda.yatranslate.adapter.SelectLangAdapter.ListItemClickListener;
 
 public class SelectLanguageActivity extends AppCompatActivity implements ListItemClickListener,
-        LoaderManager.LoaderCallbacks<List<TranslateLangItem>> {
+        YandexLangLoader.CallbacksListener, TranslateLanguagesDbLoader.CallbacksListener {
 
     /**
      * Defines how and what languages will be selected.
@@ -71,20 +71,23 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
 
     private static final String LOG_TAG = SelectLanguageActivity.class.getSimpleName();
 
-    /**
-     * Identifies a particular Loader being used in this component.
-     */
-    private static final int TRANSLATE_LANGS_LOADER_ID = 201;
+    private static final int TRANSLATE_LANGS_API_LOADER_ID = 201;
+    private static final int TRANSLATE_LANGS_DB_LOADER_ID = 301;
 
-    @BindView(R.id.rv_langs) RecyclerView mRecyclerView;
+    @BindView(R.id.rv_langs)
+    RecyclerView mRecyclerView;
+
+    /**
+     * RecyclerView adapter.
+     */
     SelectLangAdapter mAdapter;
 
     /**
      * Helps to control translate language selection flow.
-     *
+     * <p>
      * When we in the SELECT_FROM_LANG_MODE:
      * We could see list with all of the available source languages by the Yandex Translate API.
-     *
+     * <p>
      * SELECT_TO_LANG_MODE:
      * We could see only languages that are supported by the source language (from what language
      * we want translate).
@@ -100,9 +103,19 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
 
     /**
      * Holds response with supported languages.
-     * Updates onLoadFinished.
+     * Updates onLangsLoadFinished.
      */
     private List<TranslateLangItem> mSupportedLangs;
+
+    /**
+     * Yandex supported languages loader.
+     */
+    YandexLangLoader mLangApiLoader;
+
+    /**
+     * Supported languages database loader.
+     */
+    TranslateLanguagesDbLoader mLangDbLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +126,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         evaluateExtras();
         setup();
 
-        getSupportLoaderManager().initLoader(TRANSLATE_LANGS_LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(TRANSLATE_LANGS_DB_LOADER_ID, null, mLangDbLoader);
     }
 
     private void setup() {
@@ -127,30 +140,31 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         mAdapter = new SelectLangAdapter(this);
         mAdapter.setSelectedLangKey(getSelectedLangKey());
         mRecyclerView.setAdapter(mAdapter);
+
+        mLangApiLoader = new YandexLangLoader(this, this);
+        mLangDbLoader = new TranslateLanguagesDbLoader(this, this);
     }
 
     @Override
-    public Loader<List<TranslateLangItem>> onCreateLoader(int id, Bundle args) {
-        return new GenericAsyncTaskLoader<>(
-                this,
-                YandexTranslateApi.getSupportedLanguages(),
-                new GenericAsyncTaskLoader.OnStartLoadingCondition() {
-                    @Override
-                    public boolean isMeetConditions(Resource<?> resource) {
-                        return true;
-                    }
-                }
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<TranslateLangItem>> loader, List<TranslateLangItem> data) {
-        mSupportedLangs = data;
+    public void onLangsLoadFinished(List<TranslateLangItem> translateLangItems) {
+        mSupportedLangs = translateLangItems;
+        TranslateLangDbUtils.persistLangs(this, mSupportedLangs);
         onFetchSuccess();
     }
 
     @Override
-    public void onLoaderReset(Loader<List<TranslateLangItem>> loader) {
+    public void onFinishLangsQuery(Cursor cursor) {
+        mSupportedLangs = TranslateLangDbUtils.buildItemsFromCursor(cursor);
+
+        if (ArrayUtils.isEmpty(mSupportedLangs)) {
+            getSupportLoaderManager().initLoader(TRANSLATE_LANGS_API_LOADER_ID, null, mLangApiLoader);
+        } else {
+            onFetchSuccess();
+        }
+    }
+
+    @Override
+    public void onLangsLoaderReset() {
         mAdapter.updateWithNewData(null);
     }
 
