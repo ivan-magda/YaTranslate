@@ -198,6 +198,7 @@ public class TranslateFragment extends Fragment
     }
 
     private void setup() {
+        mTranslateInput.requestFocus();
         mTranslateInput.setText(mTextToTranslate);
         mTranslateInput.addTextChangedListener(new TextWatcher() {
             @Override
