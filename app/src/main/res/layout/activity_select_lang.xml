@@ -5,11 +5,25 @@
     android:layout_height="match_parent"
     tools:context="com.ivanmagda.yatranslate.activity.SelectLanguageActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_langs"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
+    <ProgressBar
+        android:id="@+id/langs_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-    </android.support.v7.widget.RecyclerView>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_langs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </FrameLayout>

@@ -26,10 +26,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.SelectLangAdapter;
@@ -74,8 +77,10 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     private static final int TRANSLATE_LANGS_API_LOADER_ID = 201;
     private static final int TRANSLATE_LANGS_DB_LOADER_ID = 301;
 
-    @BindView(R.id.rv_langs)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.rv_langs) RecyclerView mRecyclerView;
+
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.langs_progress_bar) ProgressBar mProgressBar;
 
     /**
      * RecyclerView adapter.
@@ -141,6 +146,13 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         mAdapter.setSelectedLangKey(getSelectedLangKey());
         mRecyclerView.setAdapter(mAdapter);
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getSupportLoaderManager().restartLoader(TRANSLATE_LANGS_API_LOADER_ID, null, mLangApiLoader);
+            }
+        });
+
         mLangApiLoader = new YandexLangLoader(this, this);
         mLangDbLoader = new TranslateLanguagesDbLoader(this, this);
     }
@@ -149,6 +161,10 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     public void onLangsLoadFinished(List<TranslateLangItem> translateLangItems) {
         mSupportedLangs = translateLangItems;
         TranslateLangDbUtils.persistLangs(this, mSupportedLangs);
+
+        mProgressBar.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setRefreshing(false);
+
         onFetchSuccess();
     }
 
@@ -157,6 +173,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         mSupportedLangs = TranslateLangDbUtils.buildItemsFromCursor(cursor);
 
         if (ArrayUtils.isEmpty(mSupportedLangs)) {
+            mProgressBar.setVisibility(View.VISIBLE);
             getSupportLoaderManager().initLoader(TRANSLATE_LANGS_API_LOADER_ID, null, mLangApiLoader);
         } else {
             onFetchSuccess();
