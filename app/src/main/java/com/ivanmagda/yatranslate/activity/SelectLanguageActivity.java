@@ -36,10 +36,10 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
-import com.ivanmagda.yatranslate.data.SelectLangListItem;
-import com.ivanmagda.yatranslate.data.SelectLangListItemComparator;
-import com.ivanmagda.yatranslate.data.adapter.SelectLangAdapter;
-import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.SelectLangListItem;
+import com.ivanmagda.yatranslate.model.SelectLangListItemComparator;
+import com.ivanmagda.yatranslate.adapter.SelectLangAdapter;
+import com.ivanmagda.yatranslate.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.MapUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils.OnFilterCondition;
 import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
-import static com.ivanmagda.yatranslate.data.adapter.SelectLangAdapter.ListItemClickListener;
+import static com.ivanmagda.yatranslate.adapter.SelectLangAdapter.ListItemClickListener;
 
 public class SelectLanguageActivity extends AppCompatActivity implements ListItemClickListener,
         LoaderManager.LoaderCallbacks<List<TranslateLangItem>> {

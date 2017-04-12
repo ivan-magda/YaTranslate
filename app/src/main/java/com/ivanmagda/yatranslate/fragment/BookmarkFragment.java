@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.data.adapter.BookmarkPagerAdapter;
+import com.ivanmagda.yatranslate.adapter.BookmarkPagerAdapter;
 import com.ivanmagda.yatranslate.fragment.dummy.DummyContent;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
 

@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.data.adapter.BookmarkRecyclerViewAdapter;
+import com.ivanmagda.yatranslate.adapter.BookmarkRecyclerViewAdapter;
 import com.ivanmagda.yatranslate.fragment.dummy.DummyContent;
 import com.ivanmagda.yatranslate.fragment.dummy.DummyContent.DummyItem;
 

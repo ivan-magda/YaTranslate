@@ -1,4 +1,4 @@
-package com.ivanmagda.yatranslate.data.adapter;
+package com.ivanmagda.yatranslate.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

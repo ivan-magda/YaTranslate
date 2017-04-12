@@ -31,7 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.data.TranslateFragmentState;
+import com.ivanmagda.yatranslate.model.TranslateFragmentState;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentStateListener;

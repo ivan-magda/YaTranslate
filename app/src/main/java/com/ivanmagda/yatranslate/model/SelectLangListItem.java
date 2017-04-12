@@ -20,13 +20,23 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.data;
+package com.ivanmagda.yatranslate.model;
 
-import java.util.Comparator;
+public final class SelectLangListItem {
 
-public final class SelectLangListItemComparator implements Comparator<SelectLangListItem> {
-    @Override
-    public int compare(SelectLangListItem lhs, SelectLangListItem rhs) {
-        return lhs.getLangName().compareToIgnoreCase(rhs.getLangName());
+    private String mLangKey;
+    private String mLangName;
+
+    public SelectLangListItem(String langKey, String langName) {
+        this.mLangKey = langKey;
+        this.mLangName = langName;
+    }
+
+    public String getLangKey() {
+        return mLangKey;
+    }
+
+    public String getLangName() {
+        return mLangName;
     }
 }

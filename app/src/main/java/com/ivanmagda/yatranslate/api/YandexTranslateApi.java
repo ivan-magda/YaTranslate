@@ -29,8 +29,8 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.core.Resource.Parse;
 import com.ivanmagda.network.helper.MethodParameters;
 import com.ivanmagda.network.helper.UrlBuilder;
-import com.ivanmagda.yatranslate.data.model.TranslateItem;
-import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.TranslateItem;
+import com.ivanmagda.yatranslate.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.json.TranslateItemJsonUtils;
 import com.ivanmagda.yatranslate.utils.json.TranslateLangItemJsonUtils;
 

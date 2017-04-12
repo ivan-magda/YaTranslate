@@ -25,7 +25,7 @@ package com.ivanmagda.yatranslate.utils.json;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.ivanmagda.yatranslate.data.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
 
 import org.json.JSONArray;
