@@ -11,7 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import static com.ivanmagda.yatranslate.data.TranslateContract.CONTENT_AUTHORITY;
+import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry;
 import static com.ivanmagda.yatranslate.data.TranslateContract.LanguageEntry;
+import static com.ivanmagda.yatranslate.data.TranslateContract.PATH_HISTORY;
+import static com.ivanmagda.yatranslate.data.TranslateContract.PATH_LANGUAGES;
 
 /**
  * {@link ContentProvider} for YaTranslate app.
@@ -29,16 +33,29 @@ public class TranslateProvider extends ContentProvider {
     private static final int LANGUAGE_ID = 101;
 
     /**
+     * URI matcher code for the content URI for the history table.
+     */
+    private static final int HISTORY = 200;
+
+    /**
+     * URI matcher code for the content URI for a single history in the history table.
+     */
+    private static final int HISTORY_ID = 201;
+
+    /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
      */
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sUriMatcher.addURI(TranslateContract.CONTENT_AUTHORITY, TranslateContract.PATH_LANGUAGES,
-                LANGUAGES);
-        sUriMatcher.addURI(TranslateContract.CONTENT_AUTHORITY,
-                TranslateContract.PATH_LANGUAGES + "/#", LANGUAGE_ID);
+        // languages
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_LANGUAGES, LANGUAGES);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_LANGUAGES + "/#", LANGUAGE_ID);
+
+        // history
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY, HISTORY);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY + "/#", HISTORY_ID);
     }
 
     /**
@@ -73,6 +90,18 @@ public class TranslateProvider extends ContentProvider {
                         selectionArgs, null, null, sortOrder);
 
                 break;
+            case HISTORY:
+                cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection,
+                        selectionArgs, null, null, sortOrder);
+                break;
+            case HISTORY_ID:
+                selection = HistoryEntry._ID + "=?";
+                selectionArgs = new String[]{idStringFrom(uri)};
+
+                cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection,
+                        selectionArgs, null, null, sortOrder);
+
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -92,6 +121,10 @@ public class TranslateProvider extends ContentProvider {
                 return LanguageEntry.CONTENT_LIST_TYPE;
             case LANGUAGE_ID:
                 return LanguageEntry.CONTENT_ITEM_TYPE;
+            case HISTORY:
+                return HistoryEntry.CONTENT_LIST_TYPE;
+            case HISTORY_ID:
+                return HistoryEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -100,12 +133,12 @@ public class TranslateProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         switch (sUriMatcher.match(uri)) {
-            case LANGUAGES:
+            case HISTORY:
                 SQLiteDatabase database = mTranslateDbHelper.getWritableDatabase();
-                long id = database.insert(LanguageEntry.TABLE_NAME, null, values);
+                long id = database.insert(HistoryEntry.TABLE_NAME, null, values);
 
                 if (id > 0) {
-                    // Notify all listeners that the data has changed for the product content URI.
+                    // Notify all listeners that the data has changed for the content URI.
                     notifyChangeWithUri(uri);
 
                     // Return the new URI with the ID (of the newly inserted row) appended at the end.
@@ -133,6 +166,15 @@ public class TranslateProvider extends ContentProvider {
                 selectionArgs = new String[]{idStringFrom(uri)};
                 rowsDeleted = database.delete(LanguageEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case HISTORY:
+                rowsDeleted = database.delete(HistoryEntry.TABLE_NAME, null, null);
+                break;
+            case HISTORY_ID:
+                // Delete a single row given by the ID in the URI.
+                selection = HistoryEntry._ID + "=?";
+                selectionArgs = new String[]{idStringFrom(uri)};
+                rowsDeleted = database.delete(HistoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -150,13 +192,13 @@ public class TranslateProvider extends ContentProvider {
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         switch (sUriMatcher.match(uri)) {
-            case LANGUAGE_ID:
-                selection = LanguageEntry._ID + "=?";
+            case HISTORY_ID:
+                selection = HistoryEntry._ID + "=?";
                 selectionArgs = new String[]{idStringFrom(uri)};
 
                 SQLiteDatabase database = mTranslateDbHelper.getWritableDatabase();
 
-                int rowsUpdated = database.update(LanguageEntry.TABLE_NAME, values, selection,
+                int rowsUpdated = database.update(HistoryEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 if (rowsUpdated > 0) {
                     notifyChangeWithUri(uri);
