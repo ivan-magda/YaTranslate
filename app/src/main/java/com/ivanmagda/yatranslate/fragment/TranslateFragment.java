@@ -56,6 +56,7 @@ import com.ivanmagda.yatranslate.model.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.AlertUtils;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
+import com.ivanmagda.yatranslate.utils.TranslateItemDbUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -276,7 +277,7 @@ public class TranslateFragment extends Fragment
     public void onDetach() {
         super.onDetach();
 
-        if (mListener != null){
+        if (mListener != null) {
             mListener.onSaveState(mState);
         }
 
@@ -309,6 +310,10 @@ public class TranslateFragment extends Fragment
     public void onLoadFinished(Loader<List<TranslateItem>> loader, List<TranslateItem> translateItems) {
         setLoadingIndicatorVisible(false);
         onTranslateResults(translateItems);
+
+        if (!ArrayUtils.isEmpty(translateItems)) {
+            TranslateItemDbUtils.addToHistory(getContext(), translateItems);
+        }
     }
 
     @Override

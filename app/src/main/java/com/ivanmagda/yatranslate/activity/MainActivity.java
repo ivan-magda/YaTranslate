@@ -31,17 +31,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.model.TranslateFragmentState;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentStateListener;
+import com.ivanmagda.yatranslate.model.TranslateFragmentState;
 
 public class MainActivity extends AppCompatActivity implements OnTranslateFragmentStateListener {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
-
     private static final String TRANSLATE_FRAGMENT_STATE_KEY = "TRANSLATE_FRAGMENT_STATE_KEY";
 
+    /**
+     * Helps to save and restore TranslateFragment state.
+     */
     private TranslateFragmentState mTranslateFragmentState;
 
     @Override

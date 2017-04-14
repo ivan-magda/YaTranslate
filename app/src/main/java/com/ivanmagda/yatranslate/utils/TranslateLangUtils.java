@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public final class TranslateLangItemUtils {
+public final class TranslateLangUtils {
 
     private static final int FROM_LANG_TRANSLATE_INDEX = 0;
     private static final int TO_LANG_TRANSLATE_INDEX = 1;

@@ -27,7 +27,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
+import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
 
 public final class TranslateLangItem implements Parcelable {
 
@@ -42,8 +42,8 @@ public final class TranslateLangItem implements Parcelable {
     public TranslateLangItem(@NonNull final String lang,
                              @NonNull final String fromLangName,
                              @NonNull final String toLangName) {
-        this.mFromLang = TranslateLangItemUtils.getFromLangName(lang);
-        this.mToLang = TranslateLangItemUtils.getToLangName(lang);
+        this.mFromLang = TranslateLangUtils.getFromLangName(lang);
+        this.mToLang = TranslateLangUtils.getToLangName(lang);
         this.mFromLangName = fromLangName;
         this.mToLangName = toLangName;
     }

@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.model.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
+import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,8 +73,8 @@ public final class TranslateLangItemJsonUtils {
         for (int i = 0; i < dirs.length(); i++) {
             String langDir = dirs.getString(i);
 
-            String fromLang = TranslateLangItemUtils.getFromLangName(langDir);
-            String toLang = TranslateLangItemUtils.getToLangName(langDir);
+            String fromLang = TranslateLangUtils.getFromLangName(langDir);
+            String toLang = TranslateLangUtils.getToLangName(langDir);
             String fromName = langs.getString(fromLang);
             String toName = langs.getString(toLang);
 

@@ -22,8 +22,11 @@
 
 package com.ivanmagda.yatranslate.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Objects;
 
 /**
  * Defines Yandex Translate item.
@@ -81,6 +84,37 @@ public final class TranslateItem implements Parcelable {
 
     public TranslateLangItem getTranslateLangItem() {
         return mTranslateLangItem;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof TranslateItem)) return false;
+
+        TranslateItem translateItem = (TranslateItem) obj;
+        TranslateLangItem translateLang = translateItem.getTranslateLangItem();
+
+        return translateItem.getTextToTranslate().equals(mTextToTranslate) &&
+                translateItem.getTranslatedText().equals(mTranslatedText) &&
+                translateLang.getFromLang().equals(mTranslateLangItem.getFromLang()) &&
+                translateLang.getToLang().equals(mTranslateLangItem.getToLang());
+    }
+
+    @Override
+    public int hashCode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(mTextToTranslate, mTranslatedText,
+                    mTranslateLangItem.getFromLang(), mTranslateLangItem.getToLang());
+        } else {
+            int result = 17;
+
+            result = 31 * result + mTextToTranslate.hashCode();
+            result = 31 * result + mTranslatedText.hashCode();
+            result = 31 * result + mTranslateLangItem.getFromLang().hashCode();
+            result = 31 * result + mTranslateLangItem.getToLang().hashCode();
+
+            return result;
+        }
     }
 
     @Override

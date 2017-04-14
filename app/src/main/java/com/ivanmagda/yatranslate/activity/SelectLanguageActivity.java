@@ -45,7 +45,7 @@ import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils.OnFilterCondition;
 import com.ivanmagda.yatranslate.utils.TranslateLangDbUtils;
-import com.ivanmagda.yatranslate.utils.TranslateLangItemUtils;
+import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -249,7 +249,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
 
         switch (mSelectionMode) {
             case SELECT_FROM_LANG_MODE:
-                langItems = buildLangList(TranslateLangItemUtils.getLangNames(mSupportedLangs));
+                langItems = buildLangList(TranslateLangUtils.getLangNames(mSupportedLangs));
                 break;
             case SELECT_TO_LANG_MODE:
                 langItems = buildToLangItems();
@@ -278,7 +278,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         };
 
         Map<String, String> toLangs = MapUtils.filter(
-                TranslateLangItemUtils.getLangNames(mSupportedLangs),
+                TranslateLangUtils.getLangNames(mSupportedLangs),
                 filterCondition
         );
 
@@ -310,7 +310,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
      * @return List of supported languages to what you could translate to.
      */
     private List<String> getSupportedLangs() {
-        Pair<List<String>, HashMap<String, List<String>>> langsMap = TranslateLangItemUtils
+        Pair<List<String>, HashMap<String, List<String>>> langsMap = TranslateLangUtils
                 .buildMap(mSupportedLangs);
         return langsMap.second.get(mLangItem.getFromLang());
     }

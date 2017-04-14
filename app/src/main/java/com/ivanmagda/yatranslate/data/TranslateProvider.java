@@ -43,6 +43,11 @@ public class TranslateProvider extends ContentProvider {
     private static final int HISTORY_ID = 201;
 
     /**
+     * URI matcher code for the content URI for a history that matches some string in the history table.
+     */
+    private static final int HISTORY_WITH_TEXT = 202;
+
+    /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
      */
@@ -56,6 +61,7 @@ public class TranslateProvider extends ContentProvider {
         // history
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY, HISTORY);
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY + "/#", HISTORY_ID);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY + "/*", HISTORY_WITH_TEXT);
     }
 
     /**
@@ -97,6 +103,18 @@ public class TranslateProvider extends ContentProvider {
             case HISTORY_ID:
                 selection = HistoryEntry._ID + "=?";
                 selectionArgs = new String[]{idStringFrom(uri)};
+
+                cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection,
+                        selectionArgs, null, null, sortOrder);
+
+                break;
+            case HISTORY_WITH_TEXT:
+                String text = HistoryEntry.getTranslateTextFromUri(uri);
+                String textArg = "%" + text + "%";
+
+                selection = HistoryEntry.COLUMN_TEXT_TO_TRANSLATE + " LIKE ?" + " OR " +
+                        HistoryEntry.COLUMN_TEXT_TRANSLATED + " LIKE ?";
+                selectionArgs = new String[]{textArg, textArg};
 
                 cursor = database.query(HistoryEntry.TABLE_NAME, projection, selection,
                         selectionArgs, null, null, sortOrder);
