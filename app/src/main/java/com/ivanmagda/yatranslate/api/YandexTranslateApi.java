@@ -29,8 +29,8 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.core.Resource.Parse;
 import com.ivanmagda.network.helper.MethodParameters;
 import com.ivanmagda.network.helper.UrlBuilder;
-import com.ivanmagda.yatranslate.model.TranslateItem;
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.json.TranslateItemJsonUtils;
 import com.ivanmagda.yatranslate.utils.json.TranslateLangItemJsonUtils;
 
@@ -72,9 +72,8 @@ public final class YandexTranslateApi {
         });
     }
 
-    public static Resource<List<TranslateItem>> getTranslation(
-            @NonNull final String text,
-            @NonNull final TranslateLangItem translateLang) {
+    public static Resource<List<TranslateItem>> getTranslation(@NonNull final String text,
+                                                               @NonNull final TranslateLangItem translateLang) {
         MethodParameters parameters = getDefaultMethodParameters();
         parameters.put(TEXT_KEY_PARAM, text);
         parameters.put(TRANSLATE_DIRECTION_KEY_PARAM, translateLang.getLangString());
