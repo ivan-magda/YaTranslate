@@ -19,48 +19,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.ivanmagda.yatranslate.data;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import static com.ivanmagda.yatranslate.data.TranslateContract.LanguageEntry;
+import com.ivanmagda.yatranslate.fragment.BookmarkListFragment;
 
-public final class TranslateLanguagesDbLoader implements LoaderManager.LoaderCallbacks<Cursor> {
+import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry;
+
+public final class TranslateHistoryLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public interface CallbacksListener {
-        void onFinishLangsQuery(Cursor cursor);
+        void onHistoryLoadFinished(Cursor cursor);
 
-        void onLangsLoaderReset();
+        void onHistoryLoaderReset();
     }
 
     private Context mContext;
     private CallbacksListener mCallbacksListener;
+    private BookmarkListFragment.ContentFilter mContentFilter;
 
-    public TranslateLanguagesDbLoader(@NonNull final Context context,
-                                      @NonNull final CallbacksListener callbacksListener) {
+    public TranslateHistoryLoader(@NonNull final Context context,
+                                  @NonNull final BookmarkListFragment.ContentFilter contentFilter,
+                                  @NonNull final CallbacksListener callbacksListener) {
         this.mContext = context;
+        this.mContentFilter = contentFilter;
         this.mCallbacksListener = callbacksListener;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mContext, LanguageEntry.CONTENT_URI, null, null, null, null);
+        /* URI for all rows of translate history data in our history table */
+        Uri historyQueryUri = HistoryEntry.CONTENT_URI;
+        /* Sort order: Descending by creation date */
+        String sortOrder = HistoryEntry.COLUMN_CREATED_AT + " DESC";
+        /*A SELECTION that declares which rows we'd like to return. */
+        String selection = null;
+
+        if (mContentFilter == BookmarkListFragment.ContentFilter.FAVORITE) {
+            selection = HistoryEntry.COLUMN_FAVORITE + " == 1";
+        }
+
+        return new CursorLoader(
+                mContext,
+                historyQueryUri,
+                null,
+                selection,
+                null,
+                sortOrder
+        );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCallbacksListener.onFinishLangsQuery(data);
+        mCallbacksListener.onHistoryLoadFinished(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCallbacksListener.onLangsLoaderReset();
+        mCallbacksListener.onHistoryLoaderReset();
     }
 }

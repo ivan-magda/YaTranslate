@@ -51,12 +51,12 @@ import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
 import com.ivanmagda.yatranslate.model.TranslateFragmentState;
-import com.ivanmagda.yatranslate.model.TranslateItem;
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.AlertUtils;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
-import com.ivanmagda.yatranslate.utils.TranslateItemDbUtils;
+import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
 
 import java.util.ArrayList;
 import java.util.List;

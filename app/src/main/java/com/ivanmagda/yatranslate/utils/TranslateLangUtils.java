@@ -25,7 +25,7 @@ package com.ivanmagda.yatranslate.utils;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

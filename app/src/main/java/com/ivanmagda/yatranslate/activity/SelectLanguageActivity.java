@@ -37,15 +37,15 @@ import android.widget.ProgressBar;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter;
 import com.ivanmagda.yatranslate.api.YandexLangLoader;
-import com.ivanmagda.yatranslate.data.TranslateLanguagesDbLoader;
+import com.ivanmagda.yatranslate.data.TranslateLangDbLoader;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
 import com.ivanmagda.yatranslate.model.SelectLangListItemComparator;
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils;
 import com.ivanmagda.yatranslate.utils.MapUtils.OnFilterCondition;
-import com.ivanmagda.yatranslate.utils.TranslateLangDbUtils;
 import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
+import com.ivanmagda.yatranslate.utils.database.TranslateLangDbUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +64,7 @@ import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 import static com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter.ListItemClickListener;
 
 public class SelectLanguageActivity extends AppCompatActivity implements ListItemClickListener,
-        YandexLangLoader.CallbacksListener, TranslateLanguagesDbLoader.CallbacksListener {
+        YandexLangLoader.CallbacksListener, TranslateLangDbLoader.CallbacksListener {
 
     /**
      * Defines how and what languages will be selected.
@@ -78,7 +78,6 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     private static final int TRANSLATE_LANGS_DB_LOADER_ID = 301;
 
     @BindView(R.id.rv_langs) RecyclerView mRecyclerView;
-
     @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.langs_progress_bar) ProgressBar mProgressBar;
 
@@ -108,7 +107,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
 
     /**
      * Holds response with supported languages.
-     * Updates onLangsLoadFinished.
+     * Updates onHistoryLoadFinished.
      */
     private List<TranslateLangItem> mSupportedLangs;
 
@@ -120,7 +119,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     /**
      * Supported languages database loader.
      */
-    TranslateLanguagesDbLoader mLangDbLoader;
+    TranslateLangDbLoader mLangDbLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +153,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         });
 
         mLangApiLoader = new YandexLangLoader(this, this);
-        mLangDbLoader = new TranslateLanguagesDbLoader(this, this);
+        mLangDbLoader = new TranslateLangDbLoader(this, this);
     }
 
     @Override

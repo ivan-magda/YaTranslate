@@ -31,9 +31,9 @@ public final class BookmarkPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case HISTORY_PAGE:
-                return BookmarkListFragment.newInstance(1);
+                return BookmarkListFragment.newInstance(BookmarkListFragment.ContentFilter.ALL);
             case FAVORITES_PAGE:
-                return BookmarkListFragment.newInstance(2);
+                return BookmarkListFragment.newInstance(BookmarkListFragment.ContentFilter.FAVORITE);
             default:
                 return null;
         }

@@ -20,25 +20,22 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.api;
+package com.ivanmagda.yatranslate.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.ivanmagda.network.core.Resource;
-import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
-import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
+import static com.ivanmagda.yatranslate.data.TranslateContract.LanguageEntry;
 
-import java.util.List;
-
-public final class YandexLangLoader
-        implements LoaderManager.LoaderCallbacks<List<TranslateLangItem>> {
+public final class TranslateLangDbLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public interface CallbacksListener {
-        void onLangsLoadFinished(List<TranslateLangItem> translateLangItems);
+        void onFinishLangsQuery(Cursor cursor);
 
         void onLangsLoaderReset();
     }
@@ -46,33 +43,24 @@ public final class YandexLangLoader
     private Context mContext;
     private CallbacksListener mCallbacksListener;
 
-    public YandexLangLoader(@NonNull final Context context,
-                            @NonNull final CallbacksListener callbacksListener) {
+    public TranslateLangDbLoader(@NonNull final Context context,
+                                 @NonNull final CallbacksListener callbacksListener) {
         this.mContext = context;
         this.mCallbacksListener = callbacksListener;
     }
 
     @Override
-    public Loader<List<TranslateLangItem>> onCreateLoader(int id, Bundle args) {
-        return new GenericAsyncTaskLoader<>(
-                mContext,
-                YandexTranslateApi.getSupportedLanguages(),
-                new GenericAsyncTaskLoader.OnStartLoadingCondition() {
-                    @Override
-                    public boolean isMeetConditions(Resource<?> resource) {
-                        return true;
-                    }
-                }
-        );
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(mContext, LanguageEntry.CONTENT_URI, null, null, null, null);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<TranslateLangItem>> loader, List<TranslateLangItem> data) {
-        mCallbacksListener.onLangsLoadFinished(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCallbacksListener.onFinishLangsQuery(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<TranslateLangItem>> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
         mCallbacksListener.onLangsLoaderReset();
     }
 }

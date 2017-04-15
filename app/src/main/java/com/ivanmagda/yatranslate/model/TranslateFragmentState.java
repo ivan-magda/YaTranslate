@@ -25,6 +25,8 @@ package com.ivanmagda.yatranslate.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 
 import java.util.List;

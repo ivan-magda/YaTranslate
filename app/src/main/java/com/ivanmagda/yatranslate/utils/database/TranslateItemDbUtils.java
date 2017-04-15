@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utils.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,8 +27,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.ivanmagda.yatranslate.model.TranslateItem;
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
+import com.ivanmagda.yatranslate.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.COLU
 import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.COLUMN_LANG_TRANSLATE_TO;
 import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.COLUMN_TEXT_TO_TRANSLATE;
 import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.COLUMN_TEXT_TRANSLATED;
-import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.buildHistoryUriWithText;
+import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry.buildUriWithText;
 
 public final class TranslateItemDbUtils {
 
@@ -104,7 +105,7 @@ public final class TranslateItemDbUtils {
 
     private static boolean isExist(@NonNull final Context context,
                                    @NonNull final TranslateItem translateItem) {
-        Uri searchUri = buildHistoryUriWithText(translateItem.getTextToTranslate());
+        Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
         Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
 
         List<TranslateItem> list = buildTranslateItems(cursor);

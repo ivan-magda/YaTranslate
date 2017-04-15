@@ -20,14 +20,15 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utils.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.ivanmagda.yatranslate.model.TranslateLangItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
+import com.ivanmagda.yatranslate.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;

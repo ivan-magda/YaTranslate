@@ -197,15 +197,15 @@ public final class TranslateContract {
          */
         public static final String COLUMN_CREATED_AT = "created_at";
 
-        public static Uri buildHistoryUriWithText(@NonNull final String text) {
-            return Uri.withAppendedPath(CONTENT_URI, text);
-        }
-
-        public static String getTranslateTextFromUri(Uri uri) {
+        public static String getTranslateTextFromUri(@NonNull final Uri uri) {
             return uri.getPathSegments().get(1);
         }
 
-        public static Uri buildHistoryUri(long id) {
+        public static Uri buildUriWithText(@NonNull final String text) {
+            return Uri.withAppendedPath(CONTENT_URI, text);
+        }
+
+        public static Uri buildUriWithId(final long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

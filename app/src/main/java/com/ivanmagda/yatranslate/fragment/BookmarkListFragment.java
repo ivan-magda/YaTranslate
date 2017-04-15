@@ -23,9 +23,10 @@
 package com.ivanmagda.yatranslate.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,23 +34,50 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.adapter.BookmarkRecyclerViewAdapter;
-import com.ivanmagda.yatranslate.fragment.dummy.DummyContent;
-import com.ivanmagda.yatranslate.fragment.dummy.DummyContent.DummyItem;
+import com.ivanmagda.yatranslate.adapter.TranslateHistoryAdapter;
+import com.ivanmagda.yatranslate.data.TranslateHistoryLoader;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class BookmarkListFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+import static com.ivanmagda.yatranslate.fragment.BookmarkListFragment.ContentFilter.ALL;
+
+public class BookmarkListFragment extends Fragment
+        implements TranslateHistoryLoader.CallbacksListener,
+        TranslateHistoryAdapter.TranslateHistoryAdapterOnClickListener {
+
+    /**
+     * Defines what kind of history items to present: all or favorites.
+     */
+    public enum ContentFilter {
+        ALL,
+        FAVORITE
+    }
+
+    /**
+     * This ID will be used to identify the Loader responsible for loading our translate history
+     */
+    private static final int ID_HISTORY_LOADER = 44;
+    private static final String ARG_CONTENT_FILTER = "content-filter";
+
+    @BindView(R.id.rv_history) RecyclerView mRecyclerView;
+
+    /**
+     * The content filter option.
+     */
+    private ContentFilter mContentFilter = ALL;
+
+    /**
+     * TranslateHistoryLoader is responsible for loading our history data from the history table.
+     * Both: all and favorite items.
+     */
+    private TranslateHistoryLoader mTranslateHistoryLoader;
+
+    /**
+     * The TranslateHistoryAdapter is responsible for linking our translate history data with
+     * the Views that will end up displaying our history data.
+     */
+    private TranslateHistoryAdapter mTranslateHistoryAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,13 +86,13 @@ public class BookmarkListFragment extends Fragment {
     public BookmarkListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static BookmarkListFragment newInstance(int columnCount) {
+    public static BookmarkListFragment newInstance(final ContentFilter contentFilter) {
         BookmarkListFragment fragment = new BookmarkListFragment();
+
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putSerializable(ARG_CONTENT_FILTER, contentFilter);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -73,59 +101,57 @@ public class BookmarkListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mContentFilter = (ContentFilter) getArguments().get(ARG_CONTENT_FILTER);
         }
+
+        mTranslateHistoryLoader = new TranslateHistoryLoader(getContext(), mContentFilter, this);
+        getLoaderManager().initLoader(ID_HISTORY_LOADER, null, mTranslateHistoryLoader);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bookmark_list, container, false);
+        ButterKnife.bind(this, view);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new BookmarkRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
+        Context context = view.getContext();
+
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context,
+                layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mTranslateHistoryAdapter = new TranslateHistoryAdapter(null, this);
+        mRecyclerView.setAdapter(mTranslateHistoryAdapter);
+
         return view;
     }
 
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
+    public void onHistoryLoadFinished(Cursor cursor) {
+        // Call mTranslateHistoryAdapter's swapCursor method and pass in the new Cursor
+        mTranslateHistoryAdapter.swapCursor(cursor);
+        // If mPosition equals RecyclerView.NO_POSITION, set it to 0
+        //if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        // Smooth scroll the RecyclerView to mPosition
+        //mRecyclerView.smoothScrollToPosition(mPosition);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        // If the Cursor's size is not equal to 0, call showWeatherDataView
+        //if (cursor.getCount() != 0) showWeatherDataView();
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     * The application should at this point remove any references it has to the Loader's data.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+    @Override
+    public void onHistoryLoaderReset() {
+        mTranslateHistoryAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onClick(int position) {
     }
 }

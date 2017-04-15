@@ -34,13 +34,17 @@ import android.view.ViewGroup;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.BookmarkPagerAdapter;
-import com.ivanmagda.yatranslate.fragment.dummy.DummyContent;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
 
-public class BookmarkFragment extends Fragment
-        implements BookmarkListFragment.OnListFragmentInteractionListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class BookmarkFragment extends Fragment {
 
     public static final String TAG = BookmarkFragment.class.getSimpleName();
+
+    @BindView(R.id.vpPager) ViewPager mViewPager;
+    @BindView(R.id.tabs) TabLayout mTabLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,17 +72,14 @@ public class BookmarkFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
-
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.vpPager);
+        ButterKnife.bind(this, view);
 
         // getChildFragmentManager() allows to use fragments hosted by BookmarkFragment,
         // rather than ones hosted by the activity as a whole.
         FragmentPagerAdapter adapter = new BookmarkPagerAdapter(getActivity(),
                 getChildFragmentManager());
-        viewPager.setAdapter(adapter);
-
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         return view;
     }
@@ -87,10 +88,5 @@ public class BookmarkFragment extends Fragment
     public void onDetach() {
         super.onDetach();
         FragmentUtils.setActionBarVisible(getActivity(), true);
-    }
-
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
     }
 }

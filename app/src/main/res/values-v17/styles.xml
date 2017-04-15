@@ -37,4 +37,20 @@
         <item name="android:layout_below">@+id/cv_translate_input_container</item>
         <item name="android:layout_margin">@dimen/activity_horizontal_margin</item>
     </style>
+
+    <!--BookmarkFragment-->
+
+    <style name="HistoryLangsTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:layout_marginEnd">@dimen/text_margin</item>
+        <item name="android:layout_marginRight">@dimen/text_margin</item>
+        <item name="android:layout_weight">.2</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">?attr/textAppearanceListItem</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>
