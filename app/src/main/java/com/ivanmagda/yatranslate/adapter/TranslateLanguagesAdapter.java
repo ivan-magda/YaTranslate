@@ -42,9 +42,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdapter.LangViewHolder> {
-
-    private static final String TAG = SelectLangAdapter.class.getSimpleName();
+public final class TranslateLanguagesAdapter
+        extends RecyclerView.Adapter<TranslateLanguagesAdapter.LangViewHolder> {
 
     /**
      * The interface that receives onClick messages.
@@ -63,11 +62,11 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
     private String mSelectedLangKey;
 
     /**
-     * Constructor for SelectLangAdapter that accepts a list of items to display and the specification
-     * for the ListItemClickListener.
+     * Constructor for TranslateLanguagesAdapter that accepts a list of items to display
+     * and the specification for the ListItemClickListener.
      */
-    public SelectLangAdapter(@Nullable List<SelectLangListItem> items,
-                             @NonNull final ListItemClickListener listener) {
+    public TranslateLanguagesAdapter(@Nullable List<SelectLangListItem> items,
+                                     @NonNull final ListItemClickListener listener) {
         mOnClickListener = listener;
         if (ArrayUtils.isEmpty(items)) {
             mLangItems = new ArrayList<>(30);
@@ -76,7 +75,7 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
         }
     }
 
-    public SelectLangAdapter(@NonNull final ListItemClickListener listener) {
+    public TranslateLanguagesAdapter(@NonNull final ListItemClickListener listener) {
         mOnClickListener = listener;
         mLangItems = new ArrayList<>(30);
     }
@@ -120,11 +119,8 @@ public final class SelectLangAdapter extends RecyclerView.Adapter<SelectLangAdap
     }
 
     class LangViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tv_lang)
-        TextView mLangTextView;
-
-        @BindView(R.id.iv_check)
-        ImageView mCheckImageView;
+        @BindView(R.id.tv_lang) TextView mLangTextView;
+        @BindView(R.id.iv_check) ImageView mCheckImageView;
 
         LangViewHolder(View itemView) {
             super(itemView);

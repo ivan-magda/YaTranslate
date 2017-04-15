@@ -35,7 +35,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.ivanmagda.yatranslate.R;
-import com.ivanmagda.yatranslate.adapter.SelectLangAdapter;
+import com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter;
 import com.ivanmagda.yatranslate.api.YandexLangLoader;
 import com.ivanmagda.yatranslate.data.TranslateLanguagesDbLoader;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
@@ -61,7 +61,7 @@ import butterknife.ButterKnife;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
-import static com.ivanmagda.yatranslate.adapter.SelectLangAdapter.ListItemClickListener;
+import static com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter.ListItemClickListener;
 
 public class SelectLanguageActivity extends AppCompatActivity implements ListItemClickListener,
         YandexLangLoader.CallbacksListener, TranslateLanguagesDbLoader.CallbacksListener {
@@ -85,7 +85,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     /**
      * RecyclerView adapter.
      */
-    SelectLangAdapter mAdapter;
+    TranslateLanguagesAdapter mAdapter;
 
     /**
      * Helps to control translate language selection flow.
@@ -142,7 +142,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
                 layoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapter = new SelectLangAdapter(this);
+        mAdapter = new TranslateLanguagesAdapter(this);
         mAdapter.setSelectedLangKey(getSelectedLangKey());
         mRecyclerView.setAdapter(mAdapter);
 
@@ -287,10 +287,10 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
 
     /**
      * Maps map of lang key and name values into list of the SelectLangListItem items,
-     * that accepts SelectLangAdapter.
+     * that accepts TranslateLanguagesAdapter.
      *
      * @param langNamesMap Map of langKey and langName
-     * @return List of items to be used by the SelectLangAdapter.
+     * @return List of items to be used by the TranslateLanguagesAdapter.
      */
     private static List<SelectLangListItem> buildLangList(Map<String, String> langNamesMap) {
         List<SelectLangListItem> langList = new ArrayList<>(langNamesMap.size());
