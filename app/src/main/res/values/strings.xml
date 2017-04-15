@@ -26,5 +26,6 @@
     <string name="msg_no_internet_connection">There is no internet connection</string>
     <string name="msg_empty_text">Please enter text to translate</string>
     <string name="msg_language_translate_invalid">Please select translate languages</string>
+    <string name="CD_share_translate">Share translate</string>
 
 </resources>

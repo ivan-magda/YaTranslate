@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_translate_input_container"
+    style="@style/TranslateInputCardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardPreventCornerOverlap="false"
+    app:contentPadding="@dimen/card_view_content_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/langs_container"
+            style="@style/TranslateLangsContainer">
+
+            <Button
+                android:id="@+id/bt_from_lang"
+                style="@style/TranslateLangButton"
+                tools:text="From" />
+
+            <ImageButton
+                android:id="@+id/btn_swap_langs"
+                style="@style/SwapLangsImageButton"
+                android:contentDescription="@string/CD_swap_languages" />
+
+            <Button
+                android:id="@+id/bt_to_lang"
+                style="@style/TranslateLangButton"
+                tools:text="To" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_translate_input"
+            style="@style/TranslateInputField" />
+
+        <ImageButton
+            android:id="@+id/bt_translate"
+            style="@style/TranslateIBtn"
+            android:contentDescription="@string/CD_translate" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/TranslateProgressBar" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

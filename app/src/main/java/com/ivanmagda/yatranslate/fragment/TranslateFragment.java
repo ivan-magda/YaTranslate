@@ -34,6 +34,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ import com.ivanmagda.yatranslate.utils.AlertUtils;
 import com.ivanmagda.yatranslate.utils.ArrayUtils;
 import com.ivanmagda.yatranslate.utils.FragmentUtils;
 import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
+import com.ivanmagda.yatranslate.viewmodel.TranslateItemViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,14 +69,13 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
-import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER;
 import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 
 public class TranslateFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<List<TranslateItem>> {
+        implements LoaderManager.LoaderCallbacks<List<TranslateItem>>, View.OnClickListener {
 
     /**
      * TranslateFragment interface that helps to save and then restore
@@ -99,15 +100,17 @@ public class TranslateFragment extends Fragment
     private static final String ARG_TRANSLATE_FRAGMENT_STATE = "arg-translate-fragment-state";
     private static final String TRANSLATE_FRAGMENT_STATE_KEY = "state-translate";
 
-    @BindView(R.id.btn_from_lang) Button mFromLangButton;
+    @BindView(R.id.bt_from_lang) Button mFromLangButton;
     @BindView(R.id.btn_swap_langs) ImageButton mSwapLangsButton;
-    @BindView(R.id.btn_to_lang) Button mToLangButton;
+    @BindView(R.id.bt_to_lang) Button mToLangButton;
 
     @BindView(R.id.et_translate_input) EditText mTranslateInput;
     @BindView(R.id.bt_translate) ImageButton mTranslateButton;
 
     @BindView(R.id.cv_translate_result_container) CardView mTranslateResultsContainer;
     @BindView(R.id.tv_translate_result) TextView mTranslateResultTextView;
+    @BindView(R.id.bt_toggle_favorite) ImageButton mToggleFavoriteButton;
+    @BindView(R.id.bt_share) ImageButton mShareButton;
 
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
@@ -168,8 +171,6 @@ public class TranslateFragment extends Fragment
             mState = new TranslateFragmentState(null, new ArrayList<TranslateItem>(),
                     TranslateLangItem.defaultItem);
         }
-
-        getLoaderManager().initLoader(TRANSLATE_LOADER_ID, null, this);
     }
 
     @Override
@@ -194,77 +195,6 @@ public class TranslateFragment extends Fragment
         setup();
 
         return view;
-    }
-
-    private void setup() {
-        mTranslateInput.requestFocus();
-        mTranslateInput.setText(mState.getTextToTranslate());
-        mTranslateInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mState.setTextToTranslate(s.toString());
-            }
-        });
-
-        mSwapLangsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mState.getTranslateLangs().swap();
-                updateLangButtons();
-            }
-        });
-
-        mTranslateButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentUtils.hideSoftKeyboard(getActivity());
-                queryForTranslate();
-            }
-        });
-
-        mFromLangButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectLang(true);
-            }
-        });
-        mToLangButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectLang(false);
-            }
-        });
-
-        updateLangButtons();
-        updateResultsMessage();
-    }
-
-    /**
-     * Helper function for starting SelectLanguageActivity for a result.
-     *
-     * @param selectFromLang defines what language we want to select.
-     *                       If true => select source lang (from what we want translate).
-     *                       If false => select destination lang (to what we want translate).
-     */
-    private void selectLang(boolean selectFromLang) {
-        Intent selectLangIntent = new Intent(getActivity(), SelectLanguageActivity.class);
-
-        selectLangIntent.putExtra(EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER, mState.getTranslateLangs());
-
-        int selectionMode = selectFromLang
-                ? SelectLanguageActivity.SELECT_FROM_LANG_MODE
-                : SelectLanguageActivity.SELECT_TO_LANG_MODE;
-        selectLangIntent.putExtra(EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER, selectionMode);
-
-        startActivityForResult(selectLangIntent, SELECT_LANGUAGE_REQUEST);
     }
 
     @Override
@@ -320,18 +250,94 @@ public class TranslateFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<List<TranslateItem>> loader) {
         mState.setTranslateResults(null);
-        updateResultsMessage();
+        updateTranslateResultsContent();
     }
 
-    // Private helpers.
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_swap_langs:
+                mState.getTranslateLangs().swap();
+                updateLangButtons();
+                break;
+            case R.id.bt_translate:
+                FragmentUtils.hideSoftKeyboard(getActivity());
+                queryForTranslate();
+                break;
+            case R.id.bt_from_lang:
+                selectFromLang(true);
+                break;
+            case R.id.bt_to_lang:
+                selectFromLang(false);
+                break;
+            case R.id.bt_toggle_favorite:
+                TranslateItemDbUtils.toggleFavorite(getContext(), mState.getTranslateResults().get(0));
+                performDbQuery();
+                break;
+            case R.id.bt_share:
+                break;
+            default:
+                Log.e(TAG, "Unhandled onClick action, view: " + view);
+        }
+    }
+
+    // Private Methods.
+
+    private void setup() {
+        mTranslateInput.requestFocus();
+        mTranslateInput.setText(mState.getTextToTranslate());
+        mTranslateInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mState.setTextToTranslate(s.toString());
+                mTranslateResultsContainer.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mSwapLangsButton.setOnClickListener(this);
+        mTranslateButton.setOnClickListener(this);
+        mFromLangButton.setOnClickListener(this);
+        mToLangButton.setOnClickListener(this);
+        mToggleFavoriteButton.setOnClickListener(this);
+        mShareButton.setOnClickListener(this);
+
+        performDbQuery();
+        updateLangButtons();
+        updateTranslateResultsContent();
+    }
+
+    /**
+     * Helper function for starting SelectLanguageActivity for a result.
+     *
+     * @param selectFromLang defines what language we want to select.
+     *                       If true => select source lang (from what we want translate).
+     *                       If false => select destination lang (to what we want translate).
+     */
+    private void selectFromLang(boolean selectFromLang) {
+        Intent selectLangIntent = new Intent(getActivity(), SelectLanguageActivity.class);
+
+        selectLangIntent.putExtra(EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER, mState.getTranslateLangs());
+
+        int selectionMode = selectFromLang
+                ? SelectLanguageActivity.SELECT_FROM_LANG_MODE
+                : SelectLanguageActivity.SELECT_TO_LANG_MODE;
+        selectLangIntent.putExtra(EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER, selectionMode);
+
+        startActivityForResult(selectLangIntent, SELECT_LANGUAGE_REQUEST);
+    }
 
     private void queryForTranslate() {
-        TranslateItem fromDB = TranslateItemDbUtils.searchForTranslation(
-                getContext(), mState.getTextToTranslate(), mState.getTranslateLangs());
+        if (performDbQuery()) return;
 
-        if (fromDB != null) {
-            onTranslateResults(ArrayUtils.putIntoList(fromDB));
-        } else if (!Utils.isOnline(getContext())) {
+        if (!Utils.isOnline(getContext())) {
             AlertUtils.showToast(getActivity(), R.string.msg_no_internet_connection);
         } else if (!mState.getTranslateLangs().isValid()) {
             AlertUtils.showToast(getActivity(), R.string.msg_language_translate_invalid);
@@ -343,9 +349,21 @@ public class TranslateFragment extends Fragment
         }
     }
 
+    private boolean performDbQuery() {
+        TranslateItem fromDB = TranslateItemDbUtils.searchForTranslation(
+                getContext(), mState.getTextToTranslate(), mState.getTranslateLangs());
+
+        if (fromDB != null) {
+            onTranslateResults(ArrayUtils.putIntoList(fromDB));
+            return true;
+        }
+
+        return false;
+    }
+
     private void onTranslateResults(@Nullable List<TranslateItem> translateItems) {
         mState.setTranslateResults(translateItems);
-        updateResultsMessage();
+        updateTranslateResultsContent();
 
         if (ArrayUtils.isEmpty(mState.getTranslateResults())) {
             AlertUtils.showToast(getActivity(), R.string.msg_failed_translate);
@@ -358,13 +376,23 @@ public class TranslateFragment extends Fragment
         mToLangButton.setText(langItem.getToLangName());
     }
 
-    private void updateResultsMessage() {
+    private void updateTranslateResultsContent() {
         if (!ArrayUtils.isEmpty(mState.getTranslateResults())) {
-            mTranslateResultsContainer.setVisibility(View.VISIBLE);
+            TranslateItem translateItem = mState.getTranslateResults().get(0);
+
+            // Is text changed?
+            if (!translateItem.getTextToTranslate().equals(mState.getTextToTranslate())) {
+                mTranslateResultsContainer.setVisibility(View.INVISIBLE);
+            } else {
+                mTranslateResultsContainer.setVisibility(View.VISIBLE);
+            }
+
+            TranslateItemViewModel viewModel = new TranslateItemViewModel(translateItem, getContext());
+            mToggleFavoriteButton.setColorFilter(viewModel.getFavoriteColor());
 
             StringBuilder stringBuilder = new StringBuilder(100);
-            for (TranslateItem translateItem : mState.getTranslateResults()) {
-                stringBuilder.append(translateItem.getTranslatedText()).append("\n");
+            for (TranslateItem anItem : mState.getTranslateResults()) {
+                stringBuilder.append(anItem.getTranslatedText()).append("\n");
             }
 
             mTranslateResultTextView.setText(stringBuilder.toString().trim());

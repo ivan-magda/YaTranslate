@@ -7,28 +7,12 @@
 
     <TextView
         android:id="@+id/tv_lang"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/activity_horizontal_margin"
+        style="@style/SelectLangTitleItem"
         tools:text="Russian" />
 
     <ImageView
         android:id="@+id/iv_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_lang"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tv_lang"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        style="@style/SelectLangCheckImageView"
         android:contentDescription="@string/CD_selected_language"
-        android:src="@drawable/ic_check_holo_light"
-        android:visibility="gone"
         tools:visibility="visible" />
 </RelativeLayout>
