@@ -6,12 +6,20 @@
     android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
+    <ImageButton
+        android:id="@+id/bt_toggle_favorite"
+        style="@style/ImageButtonToggleFavorite"
+        android:contentDescription="@string/CD_toggle_favorite" />
+
     <LinearLayout
         android:id="@+id/ll_translate_texts"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:layout_weight=".8"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_weight=".6"
         android:orientation="vertical">
 
         <TextView

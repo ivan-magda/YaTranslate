@@ -19,10 +19,12 @@
     <string name="CD_translate">Press to translate</string>
     <string name="CD_selected_language">Selected language</string>
     <string name="CD_swap_languages">Swap languages</string>
+    <string name="CD_toggle_favorite">Toggle favorite</string>
 
     <!--Alert Messages-->
     <string name="msg_failed_translate">Failed to translate. Try again later.</string>
     <string name="msg_no_internet_connection">There is no internet connection</string>
     <string name="msg_empty_text">Please enter text to translate</string>
     <string name="msg_language_translate_invalid">Please select translate languages</string>
+
 </resources>

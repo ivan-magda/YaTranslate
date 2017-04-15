@@ -2,6 +2,7 @@
 <resources>
 
     <!--TranslateFragment-->
+
     <style name="SwapLangsImageButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -10,4 +11,16 @@
         <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
         <item name="android:src">@drawable/ic_swap_horiz_holo_light</item>
     </style>
+
+    <!--BookmarkFragment-->
+
+    <style name="ImageButtonToggleFavorite">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_weight">.2</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:src">@drawable/ic_bookmark_holo_light</item>
+    </style>
+
 </resources>

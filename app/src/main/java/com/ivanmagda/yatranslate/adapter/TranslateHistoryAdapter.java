@@ -23,14 +23,20 @@ package com.ivanmagda.yatranslate.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
+import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
+import com.ivanmagda.yatranslate.viewmodel.TranslateItemViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,13 +47,20 @@ public class TranslateHistoryAdapter
         extends RecyclerView.Adapter<TranslateHistoryAdapter.TranslateHistoryAdapterViewHolder> {
 
     /**
-     * The interface that receives onClick messages.
+     * The interface that receives on click's messages.
      */
     public interface TranslateHistoryAdapterOnClickListener {
+
         /**
          * @param position Index of the selected item.
+         * @param selectedItem Selected TranslateItem.
          */
-        void onClick(int position);
+        void onRowClick(final int position, @NonNull final TranslateItem selectedItem);
+
+        /**
+         * @param selectedItem Selected TranslateItem.
+         */
+        void onToggleFavoriteClick(@NonNull final TranslateItem selectedItem);
     }
 
     private Cursor mCursor;
@@ -104,39 +117,54 @@ public class TranslateHistoryAdapter
 
     class TranslateHistoryAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
+        @BindView(R.id.bt_toggle_favorite) ImageButton mToggleFavoriteButton;
         @BindView(R.id.tv_to_translate) TextView mTextToTranslateTextView;
         @BindView(R.id.tv_translated) TextView mTranslatedTextView;
         @BindView(R.id.tv_translate_langs) TextView mTranslateLangsTextView;
 
         TranslateHistoryAdapterViewHolder(View view) {
             super(view);
+
             ButterKnife.bind(this, view);
+
             view.setOnClickListener(this);
+            mToggleFavoriteButton.setOnClickListener(this);
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
+            if (mClickListener == null) {
+                return;
+            }
+
             int position = getAdapterPosition();
-            if (mClickListener != null) mClickListener.onClick(position);
+
+            if (mCursor.moveToPosition(position)) {
+                TranslateItem translateItem = TranslateItemDbUtils.buildFromCursor(mCursor);
+                assert translateItem != null;
+
+                if (view.getId() == R.id.bt_toggle_favorite) {
+                    mClickListener.onToggleFavoriteClick(translateItem);
+                } else {
+                    mClickListener.onRowClick(position, translateItem);
+                }
+            }
         }
 
         void bindAt(final int position) {
             mCursor.moveToPosition(position);
+
             final Context context = itemView.getContext();
+            TranslateItem translateItem = TranslateItemDbUtils.buildFromCursor(mCursor);
 
-            final long itemId = mCursor.getLong(mCursor.getColumnIndex(HistoryEntry._ID));
-            String textToTranslate = mCursor
-                    .getString(mCursor.getColumnIndex(HistoryEntry.COLUMN_TEXT_TO_TRANSLATE));
-            String translatedText = mCursor
-                    .getString(mCursor.getColumnIndex(HistoryEntry.COLUMN_TEXT_TRANSLATED));
-            String langFrom = mCursor
-                    .getString(mCursor.getColumnIndex(HistoryEntry.COLUMN_LANG_TRANSLATE_FROM));
-            String langTo = mCursor
-                    .getString(mCursor.getColumnIndex(HistoryEntry.COLUMN_LANG_TRANSLATE_TO));
+            assert translateItem != null;
 
-            mTextToTranslateTextView.setText(textToTranslate);
-            mTranslatedTextView.setText(translatedText);
-            mTranslateLangsTextView.setText(langFrom + " - " + langTo);
+            TranslateItemViewModel viewModel = new TranslateItemViewModel(translateItem, context);
+
+            mToggleFavoriteButton.setColorFilter(viewModel.getFavoriteColor());
+            mTextToTranslateTextView.setText(translateItem.getTextToTranslate());
+            mTranslatedTextView.setText(translateItem.getTranslatedText());
+            mTranslateLangsTextView.setText(viewModel.getFormattedLangKeys());
         }
     }
 }

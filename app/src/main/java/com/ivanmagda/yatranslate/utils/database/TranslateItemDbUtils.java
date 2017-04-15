@@ -26,6 +26,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
@@ -59,13 +60,49 @@ public final class TranslateItemDbUtils {
                                     @NonNull final TranslateItem translateItem) {
         if (!isExist(context, translateItem)) {
             context.getContentResolver()
-                    .insert(HistoryEntry.CONTENT_URI, toContentValue(translateItem));
+                    .insert(HistoryEntry.CONTENT_URI, toContentValues(translateItem));
         }
+    }
+
+    public static void toggleFavorite(@NonNull final Context context,
+                                      @NonNull final TranslateItem translateItem) {
+        Uri uri = HistoryEntry.buildUriWithId(translateItem.getId());
+
+        translateItem.toggleFavorite();
+        ContentValues contentValues = toContentValues(translateItem);
+
+        context.getContentResolver().update(uri, contentValues, null, null);
+    }
+
+    /**
+     * Build TranslateItem from the current position of the Cursor.
+     * @param cursor The cursor from which data will be extracted.
+     * @return Created TranslateItem from the cursor value.
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static @Nullable TranslateItem buildFromCursor(@NonNull final Cursor cursor) {
+        if (cursor.getCount() == 0) {
+            return null;
+        }
+
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(HistoryEntry._ID));
+        boolean isFavorite = cursor
+                .getInt(cursor.getColumnIndexOrThrow(HistoryEntry.COLUMN_FAVORITE)) != 0;
+        String textToTranslate = cursor.getString(
+                cursor.getColumnIndexOrThrow(COLUMN_TEXT_TO_TRANSLATE));
+        String translatedText = cursor.getString(
+                cursor.getColumnIndexOrThrow(COLUMN_TEXT_TRANSLATED));
+        String fromLang = cursor.getString(
+                cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_FROM));
+        String toLang = cursor.getString(
+                cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_TO));
+        TranslateLangItem langItem = new TranslateLangItem(fromLang, toLang, null, null);
+
+        return new TranslateItem(id, isFavorite, textToTranslate, translatedText, langItem);
     }
 
     // Private.
 
-    @SuppressWarnings("ConstantConditions")
     private static List<TranslateItem> buildTranslateItems(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) {
             return null;
@@ -74,31 +111,29 @@ public final class TranslateItemDbUtils {
         List<TranslateItem> items = new ArrayList<>(cursor.getCount());
 
         while (cursor.moveToNext()) {
-            String textToTranslate = cursor.getString(
-                    cursor.getColumnIndexOrThrow(COLUMN_TEXT_TO_TRANSLATE));
-            String translatedText = cursor.getString(
-                    cursor.getColumnIndexOrThrow(COLUMN_TEXT_TRANSLATED));
-            String fromLang = cursor.getString(
-                    cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_FROM));
-            String toLang = cursor.getString(
-                    cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_TO));
-            TranslateLangItem langItem = new TranslateLangItem(fromLang, toLang, null, null);
-
-            items.add(new TranslateItem(textToTranslate, translatedText, langItem));
+            TranslateItem translateItem = buildFromCursor(cursor);
+            if (translateItem != null) {
+                items.add(translateItem);
+            }
         }
 
         return items;
     }
 
-    private static ContentValues toContentValue(@NonNull final TranslateItem translate) {
+    private static ContentValues toContentValues(@NonNull final TranslateItem item) {
         ContentValues contentValues = new ContentValues(5);
 
-        contentValues.put(HistoryEntry.COLUMN_TEXT_TO_TRANSLATE, translate.getTextToTranslate());
-        contentValues.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, translate.getTranslatedText());
+        contentValues.put(HistoryEntry.COLUMN_TEXT_TO_TRANSLATE, item.getTextToTranslate());
+        contentValues.put(HistoryEntry.COLUMN_TEXT_TRANSLATED, item.getTranslatedText());
         contentValues.put(HistoryEntry.COLUMN_LANG_TRANSLATE_FROM,
-                translate.getTranslateLangItem().getFromLang());
+                item.getTranslateLangItem().getFromLang());
         contentValues.put(HistoryEntry.COLUMN_LANG_TRANSLATE_TO,
-                translate.getTranslateLangItem().getToLang());
+                item.getTranslateLangItem().getToLang());
+        contentValues.put(HistoryEntry.COLUMN_FAVORITE, item.isFavorite() ? 1 : 0);
+
+        if (item.getId() != -1) {
+            contentValues.put(HistoryEntry._ID, item.getId());
+        }
 
         return contentValues;
     }

@@ -25,10 +25,12 @@ package com.ivanmagda.yatranslate.fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,8 @@ import android.view.ViewGroup;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.TranslateHistoryAdapter;
 import com.ivanmagda.yatranslate.data.TranslateHistoryLoader;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
+import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -129,6 +133,8 @@ public class BookmarkListFragment extends Fragment
         return view;
     }
 
+    // TranslateHistoryLoader.CallbacksListener.
+
     @Override
     public void onHistoryLoadFinished(Cursor cursor) {
         // Call mTranslateHistoryAdapter's swapCursor method and pass in the new Cursor
@@ -151,7 +157,15 @@ public class BookmarkListFragment extends Fragment
         mTranslateHistoryAdapter.swapCursor(null);
     }
 
+    // TranslateHistoryAdapterOnClickListener.
+
     @Override
-    public void onClick(int position) {
+    public void onRowClick(int position, @NonNull TranslateItem selectedItem) {
+
+    }
+
+    @Override
+    public void onToggleFavoriteClick(@NonNull TranslateItem selectedItem) {
+        TranslateItemDbUtils.toggleFavorite(getContext(), selectedItem);
     }
 }

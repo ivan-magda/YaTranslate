@@ -46,7 +46,7 @@ public final class TranslateLanguagesAdapter
         extends RecyclerView.Adapter<TranslateLanguagesAdapter.LangViewHolder> {
 
     /**
-     * The interface that receives onClick messages.
+     * The interface that receives onRowClick messages.
      */
     public interface ListItemClickListener {
         void onListItemClick(SelectLangListItem selectedListItem);

@@ -33,10 +33,22 @@ import java.util.Objects;
  */
 public final class TranslateItem implements Parcelable {
 
-    private final String mTextToTranslate;
-    private final String mTranslatedText;
+    private long mId = -1;
+    private boolean mIsFavorite = false;
 
-    private final TranslateLangItem mTranslateLangItem;
+    private String mTextToTranslate;
+    private String mTranslatedText;
+
+    private TranslateLangItem mTranslateLangItem;
+
+    public TranslateItem(long id, boolean isFavorite, String textToTranslate,
+                         String translatedText, TranslateLangItem translateLangItem) {
+        this.mId = id;
+        this.mIsFavorite = isFavorite;
+        this.mTextToTranslate = textToTranslate;
+        this.mTranslatedText = translatedText;
+        this.mTranslateLangItem = translateLangItem;
+    }
 
     public TranslateItem(String textToTranslate, String translatedText, TranslateLangItem langItem) {
         this.mTextToTranslate = textToTranslate;
@@ -45,6 +57,8 @@ public final class TranslateItem implements Parcelable {
     }
 
     public TranslateItem(Parcel in) {
+        this.mId = in.readLong();
+        this.mIsFavorite = in.readInt() != 0;
         this.mTextToTranslate = in.readString();
         this.mTranslatedText = in.readString();
         this.mTranslateLangItem = in.readParcelable(TranslateLangItem.class.getClassLoader());
@@ -57,6 +71,8 @@ public final class TranslateItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
+        dest.writeInt(mIsFavorite ? 1 : 0);
         dest.writeString(mTextToTranslate);
         dest.writeString(mTranslatedText);
         dest.writeParcelable(mTranslateLangItem, flags);
@@ -73,18 +89,6 @@ public final class TranslateItem implements Parcelable {
             return new TranslateItem[size];
         }
     };
-
-    public String getTextToTranslate() {
-        return mTextToTranslate;
-    }
-
-    public String getTranslatedText() {
-        return mTranslatedText;
-    }
-
-    public TranslateLangItem getTranslateLangItem() {
-        return mTranslateLangItem;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -117,13 +121,58 @@ public final class TranslateItem implements Parcelable {
         }
     }
 
+    public long getId() {
+        return mId;
+    }
+
+    public boolean isFavorite() {
+        return mIsFavorite;
+    }
+
+    public String getTextToTranslate() {
+        return mTextToTranslate;
+    }
+
+    public String getTranslatedText() {
+        return mTranslatedText;
+    }
+
+    public TranslateLangItem getTranslateLangItem() {
+        return mTranslateLangItem;
+    }
+
+    public void setId(long id) {
+        this.mId = id;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
+        this.mIsFavorite = isFavorite;
+    }
+
+    public void setTextToTranslate(String textToTranslate) {
+        this.mTextToTranslate = textToTranslate;
+    }
+
+    public void setTranslatedText(String translatedText) {
+        this.mTranslatedText = translatedText;
+    }
+
+    public void setTranslateLangItem(TranslateLangItem translateLangItem) {
+        this.mTranslateLangItem = translateLangItem;
+    }
+
+    public void toggleFavorite() {
+        this.mIsFavorite = !mIsFavorite;
+    }
+
     @Override
     public String toString() {
         return "TranslateItem{" +
-                "text to translate='" + mTextToTranslate + '\'' +
-                ", translated text='" + mTranslatedText + '\'' +
-                ", source language='" + mTranslateLangItem.getFromLang() + '\'' +
-                ", destination language='" + mTranslateLangItem.getToLang() + '\'' +
+                "id=" + mId +
+                ", isFavorite=" + mIsFavorite +
+                ", textToTranslate='" + mTextToTranslate + '\'' +
+                ", translatedText='" + mTranslatedText + '\'' +
+                ", translateLangItem=" + mTranslateLangItem +
                 '}';
     }
 }
