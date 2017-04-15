@@ -27,12 +27,12 @@
                 style="@style/ImageButtonToggleFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/CD_toggle_favorite" />
+                android:contentDescription="@string/a11y_toggle_favorite" />
 
             <ImageButton
                 android:id="@+id/bt_share"
                 style="@style/ImageButtonShare"
-                android:contentDescription="@string/CD_share_translate" />
+                android:contentDescription="@string/a11y_share_translate" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -15,12 +15,12 @@
     <string name="nv_title_translate">Translate</string>
     <string name="nv_title_bookmarks">Bookmark</string>
 
-    <!--Content Descriptions-->
-    <string name="CD_translate">Press to translate</string>
-    <string name="CD_selected_language">Selected language</string>
-    <string name="CD_swap_languages">Swap languages</string>
-    <string name="CD_toggle_favorite">Toggle favorite</string>
-    <string name="CD_share_translate">Share translate</string>
+    <!-- A11y -->
+    <string name="a11y_translate">Press to translate</string>
+    <string name="a11y_selected_language">Selected language</string>
+    <string name="a11y_swap_languages">Swap languages</string>
+    <string name="a11y_toggle_favorite">Toggle favorite</string>
+    <string name="a11y_share_translate">Share translate</string>
 
     <!--Alert Messages-->
     <string name="msg_failed_translate">Failed to translate. Try again later.</string>

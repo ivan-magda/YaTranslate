@@ -9,7 +9,7 @@
     <ImageButton
         android:id="@+id/bt_toggle_favorite"
         style="@style/ImageButtonToggleFavorite"
-        android:contentDescription="@string/CD_toggle_favorite" />
+        android:contentDescription="@string/a11y_toggle_favorite" />
 
     <LinearLayout
         android:id="@+id/ll_translate_texts"

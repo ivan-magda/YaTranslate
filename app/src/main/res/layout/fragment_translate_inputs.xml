@@ -25,7 +25,7 @@
             <ImageButton
                 android:id="@+id/btn_swap_langs"
                 style="@style/SwapLangsImageButton"
-                android:contentDescription="@string/CD_swap_languages" />
+                android:contentDescription="@string/a11y_swap_languages" />
 
             <Button
                 android:id="@+id/bt_to_lang"
@@ -40,7 +40,7 @@
         <ImageButton
             android:id="@+id/bt_translate"
             style="@style/TranslateIBtn"
-            android:contentDescription="@string/CD_translate" />
+            android:contentDescription="@string/a11y_translate" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

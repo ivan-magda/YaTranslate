@@ -13,6 +13,6 @@
     <ImageView
         android:id="@+id/iv_check"
         style="@style/SelectLangCheckImageView"
-        android:contentDescription="@string/CD_selected_language"
+        android:contentDescription="@string/a11y_selected_language"
         tools:visibility="visible" />
 </RelativeLayout>
