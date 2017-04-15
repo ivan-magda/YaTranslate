@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -275,6 +276,7 @@ public class TranslateFragment extends Fragment
                 performDbQuery();
                 break;
             case R.id.bt_share:
+                shareTranslate();
                 break;
             default:
                 Log.e(TAG, "Unhandled onClick action, view: " + view);
@@ -409,5 +411,18 @@ public class TranslateFragment extends Fragment
             mProgressBar.setVisibility(GONE);
             mTranslateButton.setVisibility(VISIBLE);
         }
+    }
+
+    private void shareTranslate() {
+        TranslateItem translateItem = mState.getTranslateResults().get(0);
+
+        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(getActivity());
+        builder.setChooserTitle(R.string.share_title)
+                .setType("text/plain")
+                .setSubject(getString(R.string.share_subject))
+                .setText("Just translated " + translateItem.getTextToTranslate() +
+                        " into " + translateItem.getTranslatedText() + ", using " +
+                        getString(R.string.app_name) + "!\n" + getString(R.string.ht_yamblz))
+                .startChooser();
     }
 }
