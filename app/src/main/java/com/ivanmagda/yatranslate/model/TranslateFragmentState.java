@@ -105,4 +105,13 @@ public final class TranslateFragmentState implements Parcelable {
     public void setTranslateLangs(TranslateLangItem translateLangs) {
         this.mTranslateLangs = translateLangs;
     }
+
+    public TranslateItem makeTranslateItem() {
+        if (ArrayUtils.isEmpty(mTranslateResults)) {
+            return null;
+        }
+        String translatedText = mTranslateResults.get(0).getTranslatedText();
+
+        return new TranslateItem(mTextToTranslate, translatedText, mTranslateLangs);
+    }
 }

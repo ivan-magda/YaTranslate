@@ -297,7 +297,8 @@ public class TranslateFragment extends Fragment
                         new OnStartLoadingCondition() {
                             @Override
                             public boolean isMeetConditions(Resource<?> resource) {
-                                return !TextUtils.isEmpty(mState.getTextToTranslate());
+                                return !TextUtils.isEmpty(mState.getTextToTranslate()) &&
+                                        Utils.isOnline(TranslateFragment.this.getContext());
                             }
                         }
                 );
@@ -325,7 +326,12 @@ public class TranslateFragment extends Fragment
     // Private helpers.
 
     private void queryForTranslate() {
-        if (!Utils.isOnline(getContext())) {
+        TranslateItem fromDB = TranslateItemDbUtils.searchForTranslation(
+                getContext(), mState.getTextToTranslate(), mState.getTranslateLangs());
+
+        if (fromDB != null) {
+            onTranslateResults(ArrayUtils.putIntoList(fromDB));
+        } else if (!Utils.isOnline(getContext())) {
             AlertUtils.showToast(getActivity(), R.string.msg_no_internet_connection);
         } else if (!mState.getTranslateLangs().isValid()) {
             AlertUtils.showToast(getActivity(), R.string.msg_language_translate_invalid);

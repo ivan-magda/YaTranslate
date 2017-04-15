@@ -24,6 +24,8 @@ package com.ivanmagda.yatranslate.utils;
 
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class ArrayUtils {
@@ -33,5 +35,14 @@ public final class ArrayUtils {
 
     public static boolean isEmpty(@Nullable List<?> list) {
         return list == null || list.size() == 0;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> putIntoList(T... items) {
+        List<T> list = new ArrayList<>(items.length);
+
+        Collections.addAll(list, items);
+
+        return list;
     }
 }

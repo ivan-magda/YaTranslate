@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
@@ -101,9 +102,7 @@ public final class TranslateItemDbUtils {
         return new TranslateItem(id, isFavorite, textToTranslate, translatedText, langItem);
     }
 
-    // Private.
-
-    private static List<TranslateItem> buildTranslateItems(Cursor cursor) {
+    public static List<TranslateItem> buildTranslateItems(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) {
             return null;
         }
@@ -119,6 +118,50 @@ public final class TranslateItemDbUtils {
 
         return items;
     }
+
+    public static boolean isExist(@NonNull final Context context,
+                                  @NonNull final TranslateItem translateItem) {
+        Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
+        Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
+
+        List<TranslateItem> list = buildTranslateItems(cursor);
+        if (ArrayUtils.isEmpty(list)) return false;
+
+        for (TranslateItem anItem : list) {
+            if (anItem.equals(translateItem)) return true;
+        }
+
+        cursor.close();
+
+        return false;
+    }
+
+    public static TranslateItem searchForTranslation(@NonNull final Context context,
+                                              String text,
+                                              TranslateLangItem langItem) {
+        if (TextUtils.isEmpty(text) || langItem == null) return null;
+
+        Uri searchUri = buildUriWithText(text);
+        Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
+        if (cursor == null) return null;
+
+        List<TranslateItem> list = buildTranslateItems(cursor);
+        if (ArrayUtils.isEmpty(list)) return null;
+
+        for (TranslateItem anItem : list) {
+            if (anItem.getTextToTranslate().equals(text) &&
+                    anItem.getTranslateLangItem().getToLang().equals(langItem.getToLang()) &&
+                    anItem.getTranslateLangItem().getFromLang().equals(langItem.getFromLang())) {
+                return anItem;
+            }
+        }
+
+        cursor.close();
+
+        return null;
+    }
+
+    // Private.
 
     private static ContentValues toContentValues(@NonNull final TranslateItem item) {
         ContentValues contentValues = new ContentValues(5);
@@ -137,22 +180,4 @@ public final class TranslateItemDbUtils {
 
         return contentValues;
     }
-
-    private static boolean isExist(@NonNull final Context context,
-                                   @NonNull final TranslateItem translateItem) {
-        Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
-        Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
-
-        List<TranslateItem> list = buildTranslateItems(cursor);
-        if (ArrayUtils.isEmpty(list)) return false;
-
-        for (TranslateItem anItem : list) {
-            if (anItem.equals(translateItem)) return true;
-        }
-
-        cursor.close();
-
-        return false;
-    }
-
 }
