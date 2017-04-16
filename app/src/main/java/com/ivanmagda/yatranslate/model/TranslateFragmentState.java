@@ -24,6 +24,7 @@ package com.ivanmagda.yatranslate.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
@@ -43,13 +44,13 @@ public final class TranslateFragmentState implements Parcelable {
     public TranslateFragmentState(String textToTranslate,
                                   List<TranslateItem> translateResults,
                                   TranslateLangItem translateLangs) {
-        this.mTextToTranslate = textToTranslate;
         this.mTranslateResults = translateResults;
         this.mTranslateLangs = translateLangs;
+        setTextToTranslate(textToTranslate);
     }
 
     public TranslateFragmentState(Parcel in) {
-        this.mTextToTranslate = in.readString();
+        setTextToTranslate(in.readString());
         in.readTypedList(mTranslateResults, TranslateItem.CREATOR);
         this.mTranslateLangs = in.readParcelable(TranslateLangItem.class.getClassLoader());
     }
@@ -83,7 +84,7 @@ public final class TranslateFragmentState implements Parcelable {
     }
 
     public void setTextToTranslate(String textToTranslate) {
-        this.mTextToTranslate = textToTranslate;
+        this.mTextToTranslate = (TextUtils.isEmpty(textToTranslate) ? "" : textToTranslate);
     }
 
     public List<TranslateItem> getTranslateResults() {
@@ -104,14 +105,5 @@ public final class TranslateFragmentState implements Parcelable {
 
     public void setTranslateLangs(TranslateLangItem translateLangs) {
         this.mTranslateLangs = translateLangs;
-    }
-
-    public TranslateItem makeTranslateItem() {
-        if (ArrayUtils.isEmpty(mTranslateResults)) {
-            return null;
-        }
-        String translatedText = mTranslateResults.get(0).getTranslatedText();
-
-        return new TranslateItem(mTextToTranslate, translatedText, mTranslateLangs);
     }
 }

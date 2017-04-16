@@ -42,4 +42,7 @@
     <string name="tv_empty_history">Empty History.</string>
     <string name="tv_empty_favorite">No Favorites.</string>
 
+    <string name="msg_clear_history">Are you sure you want to delete all history items? Favorite items will be also deleted!</string>
+    <string name="clear_history_title">Clear history</string>
+
 </resources>

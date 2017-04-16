@@ -23,10 +23,12 @@
 package com.ivanmagda.yatranslate.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,10 +143,10 @@ public class BookmarkListFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                Log.d("TEST", "Delete");
+                clearHistory();
                 return true;
             case R.id.action_search:
-                Log.d("TEST", "Search");
+                search();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -184,5 +186,25 @@ public class BookmarkListFragment extends Fragment
     @Override
     public void onToggleFavoriteClick(@NonNull TranslateItem selectedItem) {
         TranslateItemDbUtils.toggleFavorite(getContext(), selectedItem);
+    }
+
+    private void clearHistory() {
+        if (mTranslateHistoryAdapter.getItemCount() == 0) return;
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.clear_history_title)
+                .setMessage(R.string.msg_clear_history)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        TranslateItemDbUtils.clearHistory(getContext());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(R.drawable.ic_delete_holo_light)
+                .show();
+    }
+
+    private void search() {
+        if (mTranslateHistoryAdapter.getItemCount() == 0) return;
     }
 }

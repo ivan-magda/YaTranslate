@@ -21,6 +21,7 @@
  */
 package com.ivanmagda.yatranslate.utils.database;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -50,23 +51,36 @@ public final class TranslateItemDbUtils {
 
     // Public.
 
-    public static void addToHistory(@NonNull final Context context,
-                                    @NonNull final List<TranslateItem> translateItem) {
-        for (TranslateItem anTranslateItem: translateItem) {
-            addToHistory(context, anTranslateItem);
+    public static List<TranslateItem> addToHistory(@NonNull final Context context,
+                                                   @NonNull final List<TranslateItem> items) {
+        List<TranslateItem> itemsToInsert = new ArrayList<>(items);
+
+        for (TranslateItem anTranslateItem : itemsToInsert) {
+            long insertedId = addToHistory(context, anTranslateItem);
+            if (insertedId != -1) {
+                anTranslateItem.setId(insertedId);
+            }
         }
+
+        return itemsToInsert;
     }
 
-    public static void addToHistory(@NonNull final Context context,
+    public static long addToHistory(@NonNull final Context context,
                                     @NonNull final TranslateItem translateItem) {
         if (!isExist(context, translateItem)) {
-            context.getContentResolver()
+            Uri uri = context.getContentResolver()
                     .insert(HistoryEntry.CONTENT_URI, toContentValues(translateItem));
+            return ContentUris.parseId(uri);
         }
+
+        return -1;
     }
 
     public static void toggleFavorite(@NonNull final Context context,
                                       @NonNull final TranslateItem translateItem) {
+        final long id = translateItem.getId();
+        if (id == -1) throw new IllegalArgumentException("Illegal item id");
+
         Uri uri = HistoryEntry.buildUriWithId(translateItem.getId());
 
         translateItem.toggleFavorite();
@@ -77,11 +91,14 @@ public final class TranslateItemDbUtils {
 
     /**
      * Build TranslateItem from the current position of the Cursor.
+     *
      * @param cursor The cursor from which data will be extracted.
      * @return Created TranslateItem from the cursor value.
      */
     @SuppressWarnings("ConstantConditions")
-    public static @Nullable TranslateItem buildFromCursor(@NonNull final Cursor cursor) {
+    public static
+    @Nullable
+    TranslateItem buildFromCursor(@NonNull final Cursor cursor) {
         if (cursor.getCount() == 0) {
             return null;
         }
@@ -137,8 +154,8 @@ public final class TranslateItemDbUtils {
     }
 
     public static TranslateItem searchForTranslation(@NonNull final Context context,
-                                              String text,
-                                              TranslateLangItem langItem) {
+                                                     String text,
+                                                     TranslateLangItem langItem) {
         if (TextUtils.isEmpty(text) || langItem == null) return null;
 
         Uri searchUri = buildUriWithText(text);
@@ -159,6 +176,10 @@ public final class TranslateItemDbUtils {
         cursor.close();
 
         return null;
+    }
+
+    public static void clearHistory(@NonNull final Context context) {
+        context.getContentResolver().delete(HistoryEntry.CONTENT_URI, null, null);
     }
 
     // Private.

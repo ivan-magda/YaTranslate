@@ -37,10 +37,15 @@ public final class TranslateTextToSpeech implements TextToSpeech.OnInitListener 
 
     private static final String LOG_TAG = TranslateTextToSpeech.class.getSimpleName();
 
+    public interface OnInitListener {
+        void onInit(boolean isOk);
+    }
+
     /**
      * The TextToSpeech engine.
      */
     private TextToSpeech mTextToSpeech;
+    private OnInitListener mListener;
 
     private boolean mIsOk = false;
     private boolean mIsInitialized = false;
@@ -50,14 +55,19 @@ public final class TranslateTextToSpeech implements TextToSpeech.OnInitListener 
      *
      * @param context The Context.
      */
-    public TranslateTextToSpeech(@NonNull final Context context) {
+    public TranslateTextToSpeech(@NonNull final Context context, OnInitListener listener) {
         mTextToSpeech = new TextToSpeech(context, this);
+        mListener = listener;
     }
 
     @Override
     public void onInit(int status) {
         mIsInitialized = true;
         mIsOk = status != TextToSpeech.ERROR;
+
+        if (mListener != null) {
+            mListener.onInit(isOk());
+        }
     }
 
     public void shutdown() {

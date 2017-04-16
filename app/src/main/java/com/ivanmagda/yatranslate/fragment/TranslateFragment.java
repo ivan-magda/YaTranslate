@@ -266,7 +266,8 @@ public class TranslateFragment extends Fragment
         onTranslateResults(translateItems);
 
         if (!ArrayUtils.isEmpty(translateItems)) {
-            TranslateItemDbUtils.addToHistory(getContext(), translateItems);
+            mState.setTranslateResults(
+                    TranslateItemDbUtils.addToHistory(getContext(), translateItems));
         }
     }
 
@@ -319,7 +320,12 @@ public class TranslateFragment extends Fragment
     // Private Methods.
 
     private void setup() {
-        mTextToSpeech = new TranslateTextToSpeech(getContext());
+        mTextToSpeech = new TranslateTextToSpeech(getContext(), new TranslateTextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(boolean isOk) {
+                updateTextToSpeech();
+            }
+        });
 
         mTranslateInput.requestFocus();
         mTranslateInput.setText(mState.getTextToTranslate());
@@ -334,8 +340,12 @@ public class TranslateFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable s) {
+                // Is text has changes, if so hide results CardView?
+                if (!mState.getTextToTranslate().equals(s.toString())) {
+                    mTranslateResultsContainer.setVisibility(View.INVISIBLE);
+                }
+
                 mState.setTextToTranslate(s.toString());
-                mTranslateResultsContainer.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -417,20 +427,26 @@ public class TranslateFragment extends Fragment
                 mTranslateResultsContainer.setVisibility(View.VISIBLE);
             }
 
+            updateTextToTranslateOnResults();
             updateTextToSpeech();
 
             TranslateItemViewModel viewModel = new TranslateItemViewModel(translateItem, getContext());
             mToggleFavoriteButton.setColorFilter(viewModel.getFavoriteColor());
-
-            StringBuilder stringBuilder = new StringBuilder(100);
-            for (TranslateItem anItem : mState.getTranslateResults()) {
-                stringBuilder.append(anItem.getTranslatedText()).append("\n");
-            }
-
-            mTranslateResultTextView.setText(stringBuilder.toString().trim());
         } else {
             mTranslateResultsContainer.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * Updates mTranslateResultTextView text from translateResults of the mState instance variable.
+     */
+    private void updateTextToTranslateOnResults() {
+        StringBuilder stringBuilder = new StringBuilder(100);
+        for (TranslateItem anItem : mState.getTranslateResults()) {
+            stringBuilder.append(anItem.getTranslatedText()).append("\n");
+        }
+
+        mTranslateResultTextView.setText(stringBuilder.toString().trim());
     }
 
     private void setLoadingIndicatorVisible(boolean visible) {
@@ -457,8 +473,12 @@ public class TranslateFragment extends Fragment
     }
 
     private void updateTextToSpeech() {
-        mTextToSpeech.setLang(mState.getTranslateLangs());
+        if (mTextToSpeech.isOk()) {
+            mTextToSpeech.setLang(mState.getTranslateLangs());
+        }
+
         mSpeechTextButton.setVisibility(mTextToSpeech.isOk() ? View.VISIBLE : View.GONE);
+
     }
 
     private void speakTranslatedText() {
