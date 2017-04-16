@@ -80,8 +80,8 @@ public class BookmarkFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onPause() {
+        super.onPause();
         FragmentUtils.restoreDefaultElevationForActionBar(getActivity());
     }
 }

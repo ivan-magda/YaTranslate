@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     private void setCurrentFragment(Fragment fragment, String fragmentTag) {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.main_container, fragment, fragmentTag)
                 .commit();
     }
