@@ -38,4 +38,8 @@
     <string name="action_delete">Delete</string>
     <string name="action_search">Search</string>
 
+    <!--BookmarkListFragment-->
+    <string name="tv_empty_history">Empty History.</string>
+    <string name="tv_empty_favorite">No Favorites.</string>
+
 </resources>

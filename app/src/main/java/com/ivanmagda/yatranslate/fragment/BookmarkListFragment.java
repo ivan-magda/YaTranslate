@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.TranslateHistoryAdapter;
@@ -66,6 +67,7 @@ public class BookmarkListFragment extends Fragment
     private static final String ARG_CONTENT_FILTER = "content-filter";
 
     @BindView(R.id.rv_history) RecyclerView mRecyclerView;
+    @BindView(R.id.tv_empty) TextView mEmptyTextView;
 
     /**
      * The content filter option.
@@ -155,6 +157,12 @@ public class BookmarkListFragment extends Fragment
     public void onHistoryLoadFinished(Cursor cursor) {
         // Call mTranslateHistoryAdapter's swapCursor method and pass in the new Cursor
         mTranslateHistoryAdapter.swapCursor(cursor);
+
+        mEmptyTextView.setVisibility(cursor.getCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        mEmptyTextView.setText((mContentFilter == ContentFilter.ALL
+                ? R.string.tv_empty_history
+                : R.string.tv_empty_favorite)
+        );
     }
 
     /**
