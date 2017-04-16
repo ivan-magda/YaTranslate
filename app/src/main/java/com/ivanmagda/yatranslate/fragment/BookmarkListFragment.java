@@ -28,12 +28,16 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +55,7 @@ import butterknife.ButterKnife;
 import static com.ivanmagda.yatranslate.fragment.BookmarkListFragment.ContentFilter.ALL;
 
 public class BookmarkListFragment extends Fragment implements TranslateHistoryLoader.CallbacksListener,
-        TranslateHistoryAdapter.TranslateHistoryAdapterOnClickListener {
+        TranslateHistoryAdapter.TranslateHistoryAdapterOnClickListener, SearchView.OnQueryTextListener {
 
     /**
      * This interface must be implemented by activities that contain this
@@ -101,6 +105,11 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
      * List interaction listener.
      */
     private OnListFragmentInteractionListener mListener;
+
+    /**
+     * The SearchView.
+     */
+    SearchView mSearchView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -154,13 +163,35 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
     }
 
     @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.clear();
+        inflater.inflate(R.menu.bookmark, menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        mSearchView.setOnQueryTextListener(this);
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                setItemsVisibility(menu, menuItem, false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                setItemsVisibility(menu, menuItem, true);
+                return true;
+            }
+        });
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 clearHistory();
-                return true;
-            case R.id.action_search:
-                search();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -219,6 +250,24 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
         TranslateItemDbUtils.toggleFavorite(getContext(), selectedItem);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d("TEST", "Query: " + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
+        for (int i = 0; i < menu.size(); ++i) {
+            MenuItem item = menu.getItem(i);
+            if (item != exception) item.setVisible(visible);
+        }
+    }
+
     private void clearHistory() {
         if (mTranslateHistoryAdapter.getItemCount() == 0) return;
 
@@ -233,9 +282,5 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
                 .setNegativeButton(android.R.string.no, null)
                 .setIcon(R.drawable.ic_delete_holo_light)
                 .show();
-    }
-
-    private void search() {
-        if (mTranslateHistoryAdapter.getItemCount() == 0) return;
     }
 }
