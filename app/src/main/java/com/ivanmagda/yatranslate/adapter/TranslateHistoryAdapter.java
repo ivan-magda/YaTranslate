@@ -140,7 +140,9 @@ public class TranslateHistoryAdapter
             int position = getAdapterPosition();
 
             if (mCursor.moveToPosition(position)) {
-                TranslateItem translateItem = TranslateItemDbUtils.buildFromCursor(mCursor);
+                TranslateItem translateItem = TranslateItemDbUtils
+                        .buildFromCursor(view.getContext(), mCursor);
+
                 assert translateItem != null;
 
                 if (view.getId() == R.id.bt_toggle_favorite) {
@@ -155,7 +157,8 @@ public class TranslateHistoryAdapter
             mCursor.moveToPosition(position);
 
             final Context context = itemView.getContext();
-            TranslateItem translateItem = TranslateItemDbUtils.buildFromCursor(mCursor);
+            TranslateItem translateItem = TranslateItemDbUtils
+                    .buildFromCursor(itemView.getContext(), mCursor);
 
             assert translateItem != null;
 

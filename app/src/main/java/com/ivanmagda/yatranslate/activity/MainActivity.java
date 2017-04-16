@@ -33,13 +33,21 @@ import android.view.MenuItem;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.fragment.BookmarkFragment;
+import com.ivanmagda.yatranslate.fragment.BookmarkListFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
-import com.ivanmagda.yatranslate.fragment.TranslateFragment.OnTranslateFragmentStateListener;
 import com.ivanmagda.yatranslate.model.TranslateFragmentState;
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
 
-public class MainActivity extends AppCompatActivity implements OnTranslateFragmentStateListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity
+        implements TranslateFragment.OnTranslateFragmentStateListener,
+        BookmarkListFragment.OnListFragmentInteractionListener {
 
     private static final String TRANSLATE_FRAGMENT_STATE_KEY = "TRANSLATE_FRAGMENT_STATE_KEY";
+
+    @BindView(R.id.navigation) BottomNavigationView mBottomNavigationView;
 
     /**
      * Helps to save and restore TranslateFragment state.
@@ -50,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             setCurrentFragment(TranslateFragment.newInstance(), TranslateFragment.TAG);
@@ -84,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
             }
         };
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(listener);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(listener);
     }
 
     private void setCurrentFragment(Fragment fragment, String fragmentTag) {
@@ -99,5 +108,12 @@ public class MainActivity extends AppCompatActivity implements OnTranslateFragme
     @Override
     public void onSaveState(@NonNull TranslateFragmentState fragmentState) {
         mTranslateFragmentState = fragmentState;
+    }
+
+    @Override
+    public void onListFragmentInteraction(TranslateItem selectedItem) {
+        // Update state and select TranslateFragment page.
+        mTranslateFragmentState = new TranslateFragmentState(selectedItem);
+        mBottomNavigationView.findViewById(R.id.navigation_translate).performClick();
     }
 }

@@ -50,9 +50,18 @@ import butterknife.ButterKnife;
 
 import static com.ivanmagda.yatranslate.fragment.BookmarkListFragment.ContentFilter.ALL;
 
-public class BookmarkListFragment extends Fragment
-        implements TranslateHistoryLoader.CallbacksListener,
+public class BookmarkListFragment extends Fragment implements TranslateHistoryLoader.CallbacksListener,
         TranslateHistoryAdapter.TranslateHistoryAdapterOnClickListener {
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     */
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(TranslateItem selectedItem);
+    }
 
     /**
      * Defines what kind of history items to present: all or favorites.
@@ -87,6 +96,11 @@ public class BookmarkListFragment extends Fragment
      * the Views that will end up displaying our history data.
      */
     private TranslateHistoryAdapter mTranslateHistoryAdapter;
+
+    /**
+     * List interaction listener.
+     */
+    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -153,6 +167,23 @@ public class BookmarkListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement " + OnListFragmentInteractionListener.class.getSimpleName());
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     // TranslateHistoryLoader.CallbacksListener.
 
     @Override
@@ -180,7 +211,7 @@ public class BookmarkListFragment extends Fragment
 
     @Override
     public void onRowClick(int position, @NonNull TranslateItem selectedItem) {
-
+        mListener.onListFragmentInteraction(selectedItem);
     }
 
     @Override

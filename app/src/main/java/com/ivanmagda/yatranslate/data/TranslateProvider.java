@@ -33,6 +33,11 @@ public class TranslateProvider extends ContentProvider {
     private static final int LANGUAGE_ID = 101;
 
     /**
+     * URI matcher code for the content URI for a language that matches some string in the languages table.
+     */
+    private static final int LANGUAGE_WITH_TEXT = 102;
+
+    /**
      * URI matcher code for the content URI for the history table.
      */
     private static final int HISTORY = 200;
@@ -57,6 +62,7 @@ public class TranslateProvider extends ContentProvider {
         // languages
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_LANGUAGES, LANGUAGES);
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_LANGUAGES + "/#", LANGUAGE_ID);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_LANGUAGES + "/*", LANGUAGE_WITH_TEXT);
 
         // history
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_HISTORY, HISTORY);
@@ -91,6 +97,18 @@ public class TranslateProvider extends ContentProvider {
             case LANGUAGE_ID:
                 selection = LanguageEntry._ID + "=?";
                 selectionArgs = new String[]{idStringFrom(uri)};
+
+                cursor = database.query(LanguageEntry.TABLE_NAME, projection, selection,
+                        selectionArgs, null, null, sortOrder);
+
+                break;
+            case LANGUAGE_WITH_TEXT:
+                String langKey = LanguageEntry.getLangKeyFromUri(uri);
+                String langKeyArg = "%" + langKey + "%";
+
+                selection = LanguageEntry.COLUMN_TRANSLATE_FROM_KEY + " LIKE ?" + " OR " +
+                        LanguageEntry.COLUMN_TRANSLATE_TO_KEY + " LIKE ?";
+                selectionArgs = new String[]{langKeyArg, langKeyArg};
 
                 cursor = database.query(LanguageEntry.TABLE_NAME, projection, selection,
                         selectionArgs, null, null, sortOrder);

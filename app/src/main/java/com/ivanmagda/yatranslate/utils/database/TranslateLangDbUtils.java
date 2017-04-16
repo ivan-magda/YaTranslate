@@ -25,6 +25,7 @@ package com.ivanmagda.yatranslate.utils.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
@@ -86,5 +87,24 @@ public final class TranslateLangDbUtils {
         }
 
         return items;
+    }
+
+    public static List<TranslateLangItem> searchForLangWithKey(@NonNull final Context context,
+                                                               @NonNull final String key) {
+        Uri uri = LanguageEntry.buildUriWithText(key);
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            List<TranslateLangItem> items = buildItemsFromCursor(cursor);
+            cursor.close();
+
+            return items;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return null;
     }
 }

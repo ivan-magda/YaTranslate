@@ -95,10 +95,10 @@ public final class TranslateItemDbUtils {
      * @param cursor The cursor from which data will be extracted.
      * @return Created TranslateItem from the cursor value.
      */
-    @SuppressWarnings("ConstantConditions")
     public static
     @Nullable
-    TranslateItem buildFromCursor(@NonNull final Cursor cursor) {
+    TranslateItem buildFromCursor(@NonNull final Context context,
+                                  @NonNull final Cursor cursor) {
         if (cursor.getCount() == 0) {
             return null;
         }
@@ -114,12 +114,13 @@ public final class TranslateItemDbUtils {
                 cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_FROM));
         String toLang = cursor.getString(
                 cursor.getColumnIndexOrThrow(COLUMN_LANG_TRANSLATE_TO));
-        TranslateLangItem langItem = new TranslateLangItem(fromLang, toLang, null, null);
+        TranslateLangItem langItem = getTranslateLangItemFromKeys(context, fromLang, toLang);
 
         return new TranslateItem(id, isFavorite, textToTranslate, translatedText, langItem);
     }
 
-    public static List<TranslateItem> buildTranslateItems(Cursor cursor) {
+    public static List<TranslateItem> buildTranslateItems(@NonNull final Context context,
+                                                          Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) {
             return null;
         }
@@ -127,7 +128,7 @@ public final class TranslateItemDbUtils {
         List<TranslateItem> items = new ArrayList<>(cursor.getCount());
 
         while (cursor.moveToNext()) {
-            TranslateItem translateItem = buildFromCursor(cursor);
+            TranslateItem translateItem = buildFromCursor(context, cursor);
             if (translateItem != null) {
                 items.add(translateItem);
             }
@@ -141,7 +142,7 @@ public final class TranslateItemDbUtils {
         Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
         Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
 
-        List<TranslateItem> list = buildTranslateItems(cursor);
+        List<TranslateItem> list = buildTranslateItems(context, cursor);
         if (ArrayUtils.isEmpty(list)) return false;
 
         for (TranslateItem anItem : list) {
@@ -162,7 +163,7 @@ public final class TranslateItemDbUtils {
         Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
         if (cursor == null) return null;
 
-        List<TranslateItem> list = buildTranslateItems(cursor);
+        List<TranslateItem> list = buildTranslateItems(context, cursor);
         if (ArrayUtils.isEmpty(list)) return null;
 
         for (TranslateItem anItem : list) {
@@ -200,5 +201,47 @@ public final class TranslateItemDbUtils {
         }
 
         return contentValues;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private static TranslateLangItem getTranslateLangItemFromKeys(@NonNull final Context context,
+                                                                  @NonNull final String fromKey,
+                                                                  @NonNull final String toKey) {
+        List<TranslateLangItem> items = TranslateLangDbUtils.searchForLangWithKey(context, fromKey);
+        List<TranslateLangItem> fromLangItems = TranslateLangDbUtils.searchForLangWithKey(context, toKey);
+
+        if (ArrayUtils.isEmpty(items) || ArrayUtils.isEmpty(fromLangItems)) {
+            return null;
+        }
+
+        if (!ArrayUtils.isEmpty(fromLangItems)) {
+            items.addAll(fromLangItems);
+        }
+
+        String fromLangName = null;
+        String toLangName = null;
+
+        for (TranslateLangItem anItem : items) {
+            if (!TextUtils.isEmpty(fromLangName) && !TextUtils.isEmpty(toLangName)) break;
+
+            if (anItem.getFromLang().equals(fromKey)) {
+                fromLangName = anItem.getFromLangName();
+            } else if (anItem.getToLang().equals(fromKey)) {
+                fromLangName = anItem.getToLangName();
+            }
+
+            if (anItem.getFromLang().equals(toKey)) {
+                toLangName = anItem.getToLangName();
+            } else if (anItem.getToLang().equals(toKey)) {
+                toLangName = anItem.getToLangName();
+            }
+        }
+
+        /* This probably could happen if we doesn't fetch supported languages yet. */
+        if (TextUtils.isEmpty(fromLangName) || TextUtils.isEmpty(toLangName)) {
+            return new TranslateLangItem(fromKey, toKey, null, null);
+        }
+
+        return new TranslateLangItem(fromKey, toKey, fromLangName, toLangName);
     }
 }

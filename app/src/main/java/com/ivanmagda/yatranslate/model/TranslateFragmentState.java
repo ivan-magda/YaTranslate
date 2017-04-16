@@ -24,6 +24,7 @@ package com.ivanmagda.yatranslate.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
@@ -47,6 +48,12 @@ public final class TranslateFragmentState implements Parcelable {
         this.mTranslateResults = translateResults;
         this.mTranslateLangs = translateLangs;
         setTextToTranslate(textToTranslate);
+    }
+
+    public TranslateFragmentState(@NonNull final TranslateItem translateItem) {
+        this.mTranslateResults = ArrayUtils.putIntoList(translateItem);
+        this.mTranslateLangs = translateItem.getTranslateLangItem();
+        this.mTextToTranslate = translateItem.getTextToTranslate();
     }
 
     public TranslateFragmentState(Parcel in) {

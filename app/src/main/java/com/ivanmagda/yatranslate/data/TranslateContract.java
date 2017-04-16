@@ -106,6 +106,14 @@ public final class TranslateContract {
          */
         public static final String COLUMN_TRANSLATE_TO_NAME = "translate_to_name";
 
+        public static String getLangKeyFromUri(@NonNull final Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri buildUriWithText(@NonNull final String text) {
+            return Uri.withAppendedPath(CONTENT_URI, text);
+        }
+
         public static Uri buildLanguageUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
