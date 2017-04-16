@@ -32,6 +32,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -117,6 +118,7 @@ public class BookmarkListFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bookmark_list, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         Context context = view.getContext();
 
@@ -133,19 +135,26 @@ public class BookmarkListFragment extends Fragment
         return view;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                Log.d("TEST", "Delete");
+                return true;
+            case R.id.action_search:
+                Log.d("TEST", "Search");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     // TranslateHistoryLoader.CallbacksListener.
 
     @Override
     public void onHistoryLoadFinished(Cursor cursor) {
         // Call mTranslateHistoryAdapter's swapCursor method and pass in the new Cursor
         mTranslateHistoryAdapter.swapCursor(cursor);
-        // If mPosition equals RecyclerView.NO_POSITION, set it to 0
-        //if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        // Smooth scroll the RecyclerView to mPosition
-        //mRecyclerView.smoothScrollToPosition(mPosition);
-
-        // If the Cursor's size is not equal to 0, call showWeatherDataView
-        //if (cursor.getCount() != 0) showWeatherDataView();
     }
 
     /**

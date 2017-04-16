@@ -29,6 +29,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -68,6 +70,7 @@ public class BookmarkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         // getChildFragmentManager() allows to use fragments hosted by BookmarkFragment,
         // rather than ones hosted by the activity as a whole.
@@ -77,6 +80,13 @@ public class BookmarkFragment extends Fragment {
         mTabLayout.setupWithViewPager(mViewPager);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.bookmark, menu);
     }
 
     @Override

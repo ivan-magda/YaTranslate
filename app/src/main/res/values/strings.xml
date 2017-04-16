@@ -34,4 +34,8 @@
     <string name="share_title">Choose Share App</string>
     <string name="share_subject">Translate result</string>
 
+    <!--Menu-->
+    <string name="action_delete">Delete</string>
+    <string name="action_search">Search</string>
+
 </resources>

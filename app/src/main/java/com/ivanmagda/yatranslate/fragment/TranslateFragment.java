@@ -36,6 +36,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -200,6 +202,7 @@ public class TranslateFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_translate, container, false);
         ButterKnife.bind(this, view);
 
+        setHasOptionsMenu(true);
         setup();
 
         return view;
@@ -209,6 +212,12 @@ public class TranslateFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(TRANSLATE_FRAGMENT_STATE_KEY, mState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     @Override
