@@ -320,6 +320,8 @@ public class TranslateFragment extends Fragment
     // Private Methods.
 
     private void setup() {
+        FragmentUtils.setTitle(getActivity(), R.string.activity_translate_title);
+
         mTextToSpeech = new TranslateTextToSpeech(getContext(), new TranslateTextToSpeech.OnInitListener() {
             @Override
             public void onInit(boolean isOk) {

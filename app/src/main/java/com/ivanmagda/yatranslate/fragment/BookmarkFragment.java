@@ -75,6 +75,8 @@ public class BookmarkFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
         ButterKnife.bind(this, view);
 
+        FragmentUtils.setTitle(getActivity(), R.string.fragment_bookmark_title);
+
         // getChildFragmentManager() allows to use fragments hosted by BookmarkFragment,
         // rather than ones hosted by the activity as a whole.
         FragmentPagerAdapter adapter = new BookmarkPagerAdapter(getActivity(),

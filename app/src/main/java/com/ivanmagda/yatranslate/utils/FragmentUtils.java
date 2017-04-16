@@ -24,7 +24,6 @@ package com.ivanmagda.yatranslate.utils;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -54,11 +53,33 @@ public final class FragmentUtils {
 
     public static void setElevationForActionBar(@NonNull final FragmentActivity activity,
                                                 final float elevation) {
-        if (activity instanceof AppCompatActivity) {
-            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setElevation(elevation);
-            }
+        ActionBar actionBar = getActionBar(activity);
+        if (actionBar != null) {
+            actionBar.setElevation(elevation);
         }
+    }
+
+    public static void setTitle(@NonNull final FragmentActivity fragmentActivity,
+                                @NonNull final String title) {
+        ActionBar actionBar = getActionBar(fragmentActivity);
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
+    }
+
+    public static void setTitle(@NonNull final FragmentActivity fragmentActivity,
+                                final int stringResourceId) {
+        ActionBar actionBar = getActionBar(fragmentActivity);
+        if (actionBar != null) {
+            actionBar.setTitle(stringResourceId);
+        }
+    }
+
+    private static ActionBar getActionBar(@NonNull final FragmentActivity fragmentActivity) {
+        if (fragmentActivity instanceof AppCompatActivity) {
+            return ((AppCompatActivity) fragmentActivity).getSupportActionBar();
+        }
+
+        return null;
     }
 }
