@@ -24,9 +24,7 @@ package com.ivanmagda.yatranslate.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,7 +35,6 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +49,7 @@ import com.ivanmagda.network.helper.GenericAsyncTaskLoader;
 import com.ivanmagda.network.helper.GenericAsyncTaskLoader.OnStartLoadingCondition;
 import com.ivanmagda.network.utils.Utils;
 import com.ivanmagda.yatranslate.R;
+import com.ivanmagda.yatranslate.TranslateTextToSpeech;
 import com.ivanmagda.yatranslate.activity.SelectLanguageActivity;
 import com.ivanmagda.yatranslate.api.YandexTranslateApi;
 import com.ivanmagda.yatranslate.model.TranslateFragmentState;
@@ -64,9 +62,7 @@ import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
 import com.ivanmagda.yatranslate.viewmodel.TranslateItemViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,7 +134,7 @@ public class TranslateFragment extends Fragment
     /**
      * The TextToSpeech engine.
      */
-    private TextToSpeech mTextToSpeech;
+    TranslateTextToSpeech mTextToSpeech;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -218,11 +214,7 @@ public class TranslateFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-
-        if (mTextToSpeech != null) {
-            mTextToSpeech.stop();
-            mTextToSpeech.shutdown();
-        }
+        if (mTextToSpeech != null) mTextToSpeech.shutdown();
     }
 
     @Override
@@ -318,6 +310,8 @@ public class TranslateFragment extends Fragment
     // Private Methods.
 
     private void setup() {
+        mTextToSpeech = new TranslateTextToSpeech(getContext());
+
         mTranslateInput.requestFocus();
         mTranslateInput.setText(mState.getTextToTranslate());
         mTranslateInput.addTextChangedListener(new TextWatcher() {
@@ -333,15 +327,6 @@ public class TranslateFragment extends Fragment
             public void afterTextChanged(Editable s) {
                 mState.setTextToTranslate(s.toString());
                 mTranslateResultsContainer.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        mTextToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    mSpeechTextButton.setVisibility(View.VISIBLE);
-                }
             }
         });
 
@@ -463,26 +448,11 @@ public class TranslateFragment extends Fragment
     }
 
     private void updateTextToSpeech() {
-        TranslateLangItem translateLang = mState.getTranslateLangs();
-
-        int result = mTextToSpeech.setLanguage(new Locale(translateLang.getToLang()));
-        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            Log.e(TAG, "This language is not supported: " + translateLang);
-            mSpeechTextButton.setVisibility(View.GONE);
-        } else {
-            mSpeechTextButton.setVisibility(View.VISIBLE);
-        }
+        mTextToSpeech.setLang(mState.getTranslateLangs());
+        mSpeechTextButton.setVisibility(mTextToSpeech.isOk() ? View.VISIBLE : View.GONE);
     }
 
     private void speakTranslatedText() {
-        TranslateItem translateItem = mState.getTranslateResults().get(0);
-        final String REQUEST_ID = "speech-translated-text";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mTextToSpeech.speak(translateItem.getTranslatedText(), TextToSpeech.QUEUE_FLUSH, null,
-                    REQUEST_ID);
-        } else {
-            mTextToSpeech.speak(translateItem.getTranslatedText(), TextToSpeech.QUEUE_FLUSH, null);
-        }
+        mTextToSpeech.speak(mState.getTranslateResults().get(0));
     }
 }
