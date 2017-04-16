@@ -23,6 +23,8 @@
 package com.ivanmagda.yatranslate.utils;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public final class FragmentUtils {
+
+    private static final float DEFAULT_ACTION_BAR_ELEVATION = 12.0f;
 
     private FragmentUtils() {
     }
@@ -44,19 +48,17 @@ public final class FragmentUtils {
         }
     }
 
-    public static void setActionBarVisible(FragmentActivity fragmentActivity, boolean visible) {
-        if (fragmentActivity instanceof AppCompatActivity) {
-            ActionBar actionBar = ((AppCompatActivity) fragmentActivity).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setShowHideAnimationEnabled(false);
+    public static void restoreDefaultElevationForActionBar(@NonNull final FragmentActivity activity) {
+        setElevationForActionBar(activity, DEFAULT_ACTION_BAR_ELEVATION);
+    }
 
-                if (visible) {
-                    actionBar.show();
-                } else {
-                    actionBar.hide();
-                }
+    public static void setElevationForActionBar(@NonNull final FragmentActivity activity,
+                                                final float elevation) {
+        if (activity instanceof AppCompatActivity) {
+            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setElevation(elevation);
             }
         }
     }
-
 }

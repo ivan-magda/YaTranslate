@@ -59,14 +59,9 @@ public class BookmarkFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        FragmentUtils.setActionBarVisible(getActivity(), false);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FragmentUtils.setElevationForActionBar(getActivity(), 0f);
     }
 
     @Override
@@ -87,6 +82,6 @@ public class BookmarkFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        FragmentUtils.setActionBarVisible(getActivity(), true);
+        FragmentUtils.restoreDefaultElevationForActionBar(getActivity());
     }
 }
