@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_translate_result_container"
     style="@style/TranslateResultCardView"
     app:cardPreventCornerOverlap="false"
@@ -28,6 +29,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/a11y_toggle_favorite" />
+
+            <ImageButton
+                android:id="@+id/bt_speech_text"
+                style="@style/ImageButtonSpeechText"
+                android:contentDescription="@string/a11y_speech_text"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/bt_share"

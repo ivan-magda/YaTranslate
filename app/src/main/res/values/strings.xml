@@ -21,6 +21,7 @@
     <string name="a11y_swap_languages">Swap languages</string>
     <string name="a11y_toggle_favorite">Toggle favorite</string>
     <string name="a11y_share_translate">Share translate</string>
+    <string name="a11y_speech_text">Speech translated text</string>
 
     <!--Alert Messages-->
     <string name="msg_failed_translate">Failed to translate. Try again later.</string>

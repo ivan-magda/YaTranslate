@@ -23,7 +23,7 @@
                 tools:text="From" />
 
             <ImageButton
-                android:id="@+id/btn_swap_langs"
+                android:id="@+id/bt_swap_langs"
                 style="@style/SwapLangsImageButton"
                 android:contentDescription="@string/a11y_swap_languages" />
 

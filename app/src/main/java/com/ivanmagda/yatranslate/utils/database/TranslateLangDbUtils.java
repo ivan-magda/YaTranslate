@@ -41,7 +41,7 @@ public final class TranslateLangDbUtils {
     }
 
     /**
-     * Inserts the new languages information into the database.
+     * Inserts the new languages data into the database.
      *
      * @param langItems List of languages to be persist.
      */

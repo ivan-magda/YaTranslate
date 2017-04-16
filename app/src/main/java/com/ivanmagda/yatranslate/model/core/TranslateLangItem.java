@@ -37,7 +37,7 @@ public final class TranslateLangItem implements Parcelable {
     private String mFromLangName;
     private String mToLangName;
 
-    public static TranslateLangItem defaultItem = new TranslateLangItem("en", "ru", "English", "Russian");
+    public static TranslateLangItem defaultItem = new TranslateLangItem("ru", "en", "Russian", "English");
 
     public TranslateLangItem(@NonNull final String lang,
                              @NonNull final String fromLangName,
@@ -131,6 +131,16 @@ public final class TranslateLangItem implements Parcelable {
     public void swap() {
         swapLangKeys();
         swapLangNames();
+    }
+
+    @Override
+    public String toString() {
+        return "TranslateLangItem{" +
+                "mFromLang='" + mFromLang + '\'' +
+                ", mToLang='" + mToLang + '\'' +
+                ", mFromLangName='" + mFromLangName + '\'' +
+                ", mToLangName='" + mToLangName + '\'' +
+                '}';
     }
 
     // Private Helpers.
