@@ -12,6 +12,8 @@ YaTranslate has the following functionality:
 * The ability to view favorites.
 * Translation from one language to another using Yandex.Translate API.
 
+**Disclaimer**: Copying the code from the repository and pretending it to be sure would be bad. Even looking into it may be an infringement.
+
 ## Installation
 * In `YandexTranslateApi.java` replace `API_KEY` with your own.
 
