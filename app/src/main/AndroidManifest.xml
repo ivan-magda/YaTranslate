@@ -19,6 +19,19 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name=".sync.YaTranslateIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".sync.YaTranslateFirebaseJobService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/activity_translate_title"
@@ -29,11 +42,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable">
-
-            </meta-data>
+                android:resource="@xml/searchable" />
         </activity>
 
         <activity
@@ -44,6 +56,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>
