@@ -48,7 +48,7 @@
     <string name="hint_search_history">Search in history</string>
     <string name="tv_empty_history_search">No Data Found</string>
 
-    <string name="msg_clear_history">Are you sure you want to delete all history items?\n\nFavorite items will be also deleted!</string>
+    <string name="msg_clear_history">Are you sure you want to delete all history items?\n\nFavorite items will also be deleted!</string>
     <string name="clear_history_title">Clear history</string>
 
 </resources>
