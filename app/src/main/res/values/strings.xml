@@ -4,8 +4,6 @@
     <string name="activity_select_lang_title">Select Language</string>
     <string name="activity_translate_title">Translate</string>
     <string name="fragment_bookmark_title">Bookmark</string>
-    <string name="fragment_history_title">History</string>
-    <string name="fragment_favorite_title">Favorite</string>
 
     <!--TranslateFragment-->
     <string name="translate_hint">Enter text</string>

@@ -107,11 +107,6 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
     private OnListFragmentInteractionListener mListener;
 
     /**
-     * The SearchView.
-     */
-    private SearchView mSearchView;
-
-    /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
@@ -171,7 +166,7 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
 
         final MenuItem menuItem = menu.findItem(R.id.action_search);
 
-        mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         mSearchView.setQueryHint(getString(R.string.hint_search_history));
         mSearchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {

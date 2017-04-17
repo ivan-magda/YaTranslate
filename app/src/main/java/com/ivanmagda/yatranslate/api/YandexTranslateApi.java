@@ -32,7 +32,7 @@ import com.ivanmagda.network.helper.UrlBuilder;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utilities.json.TranslateItemJsonUtils;
-import com.ivanmagda.yatranslate.utilities.json.TranslateLangItemJsonUtils;
+import com.ivanmagda.yatranslate.utilities.json.TranslateLangJsonUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -65,7 +65,7 @@ public final class YandexTranslateApi {
         return new Resource<>(url, new Parse<List<TranslateLangItem>>() {
             @Override
             public List<TranslateLangItem> parse(@Nullable String response) {
-                return TranslateLangItemJsonUtils.buildFromResponse(response);
+                return TranslateLangJsonUtils.buildFromResponse(response);
             }
         });
     }

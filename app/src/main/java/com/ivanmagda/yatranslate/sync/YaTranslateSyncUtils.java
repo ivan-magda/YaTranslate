@@ -65,7 +65,7 @@ public final class YaTranslateSyncUtils {
      * @param context Context used to create the GooglePlayDriver that powers the
      *                FirebaseJobDispatcher.
      */
-    static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
+    private static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -144,7 +144,7 @@ public final class YaTranslateSyncUtils {
      *
      * @param context The Context used to start the IntentService for the sync.
      */
-    public static void startImmediateSync(@NonNull final Context context) {
+    private static void startImmediateSync(@NonNull final Context context) {
         Intent intentToSyncImmediately = new Intent(context, YaTranslateIntentService.class);
         context.startService(intentToSyncImmediately);
     }

@@ -38,13 +38,13 @@ import java.util.List;
 /**
  * Utility functions to handle Yandex Translate supported languages JSON data.
  */
-public final class TranslateLangItemJsonUtils {
+public final class TranslateLangJsonUtils {
 
     /* Response keys. */
     private static final String DIRS_RESPONSE_KEY = "dirs";
     private static final String LANGS_RESPONSE_KEY = "langs";
 
-    private TranslateLangItemJsonUtils() {
+    private TranslateLangJsonUtils() {
     }
 
     public static List<TranslateLangItem> buildFromResponse(@Nullable String response) {

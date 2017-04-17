@@ -24,8 +24,8 @@ package com.ivanmagda.yatranslate.model;
 
 public final class SelectLangListItem {
 
-    private String mLangKey;
-    private String mLangName;
+    private final String mLangKey;
+    private final String mLangName;
 
     public SelectLangListItem(String langKey, String langName) {
         this.mLangKey = langKey;

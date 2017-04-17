@@ -38,9 +38,9 @@ public final class Resource<A> {
         Result parse(@Nullable String response);
     }
 
-    public URL url;
+    public final URL url;
     public String httpMethodName = "GET";
-    public Parse<A> parseBlock;
+    public final Parse<A> parseBlock;
 
     public Resource(@NonNull URL url, @NonNull Parse<A> parse) {
         this.url = url;

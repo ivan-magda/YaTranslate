@@ -38,8 +38,8 @@ public final class GenericAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
         boolean isMeetConditions(Resource<?> resource);
     }
 
-    private Resource<T> mResource;
-    private OnStartLoadingCondition mLoadingCondition;
+    private final Resource<T> mResource;
+    private final OnStartLoadingCondition mLoadingCondition;
 
     public GenericAsyncTaskLoader(@NonNull final Context context,
                                   @NonNull final Resource<T> resource,

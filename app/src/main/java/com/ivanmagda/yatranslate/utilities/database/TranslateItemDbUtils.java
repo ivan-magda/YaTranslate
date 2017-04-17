@@ -57,7 +57,7 @@ public final class TranslateItemDbUtils {
 
         for (TranslateItem anTranslateItem : itemsToInsert) {
             long insertedId = addToHistory(context, anTranslateItem);
-            if (insertedId != -1) {
+            if (insertedId != TranslateItem.ID_NOT_FOUND) {
                 anTranslateItem.setId(insertedId);
             }
         }
@@ -65,21 +65,10 @@ public final class TranslateItemDbUtils {
         return itemsToInsert;
     }
 
-    public static long addToHistory(@NonNull final Context context,
-                                    @NonNull final TranslateItem translateItem) {
-        if (!isExist(context, translateItem)) {
-            Uri uri = context.getContentResolver()
-                    .insert(HistoryEntry.CONTENT_URI, toContentValues(translateItem));
-            return ContentUris.parseId(uri);
-        }
-
-        return -1;
-    }
-
     public static void toggleFavorite(@NonNull final Context context,
                                       @NonNull final TranslateItem translateItem) {
         final long id = translateItem.getId();
-        if (id == -1) throw new IllegalArgumentException("Illegal item id");
+        if (id == TranslateItem.ID_NOT_FOUND) throw new IllegalArgumentException("Illegal item id");
 
         Uri uri = HistoryEntry.buildUriWithId(translateItem.getId());
 
@@ -119,39 +108,15 @@ public final class TranslateItemDbUtils {
         return new TranslateItem(id, isFavorite, textToTranslate, translatedText, langItem);
     }
 
-    public static List<TranslateItem> buildTranslateItems(@NonNull final Context context,
-                                                          Cursor cursor) {
-        if (cursor == null || cursor.getCount() == 0) {
-            return null;
+    private static long addToHistory(@NonNull final Context context,
+                                     @NonNull final TranslateItem translateItem) {
+        if (!isExist(context, translateItem)) {
+            Uri uri = context.getContentResolver()
+                    .insert(HistoryEntry.CONTENT_URI, toContentValues(translateItem));
+            return ContentUris.parseId(uri);
         }
 
-        List<TranslateItem> items = new ArrayList<>(cursor.getCount());
-
-        while (cursor.moveToNext()) {
-            TranslateItem translateItem = buildFromCursor(context, cursor);
-            if (translateItem != null) {
-                items.add(translateItem);
-            }
-        }
-
-        return items;
-    }
-
-    public static boolean isExist(@NonNull final Context context,
-                                  @NonNull final TranslateItem translateItem) {
-        Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
-        Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
-
-        List<TranslateItem> list = buildTranslateItems(context, cursor);
-        if (ArrayUtils.isEmpty(list)) return false;
-
-        for (TranslateItem anItem : list) {
-            if (anItem.equals(translateItem)) return true;
-        }
-
-        cursor.close();
-
-        return false;
+        return TranslateItem.ID_NOT_FOUND;
     }
 
     public static TranslateItem searchForTranslation(@NonNull final Context context,
@@ -196,11 +161,46 @@ public final class TranslateItemDbUtils {
                 item.getTranslateLangItem().getToLang());
         contentValues.put(HistoryEntry.COLUMN_FAVORITE, item.isFavorite() ? 1 : 0);
 
-        if (item.getId() != -1) {
+        if (item.getId() != TranslateItem.ID_NOT_FOUND) {
             contentValues.put(HistoryEntry._ID, item.getId());
         }
 
         return contentValues;
+    }
+
+    private static List<TranslateItem> buildTranslateItems(@NonNull final Context context,
+                                                           Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) {
+            return null;
+        }
+
+        List<TranslateItem> items = new ArrayList<>(cursor.getCount());
+
+        while (cursor.moveToNext()) {
+            TranslateItem translateItem = buildFromCursor(context, cursor);
+            if (translateItem != null) {
+                items.add(translateItem);
+            }
+        }
+
+        return items;
+    }
+
+    private static boolean isExist(@NonNull final Context context,
+                                   @NonNull final TranslateItem translateItem) {
+        Uri searchUri = buildUriWithText(translateItem.getTextToTranslate());
+        Cursor cursor = context.getContentResolver().query(searchUri, null, null, null, null);
+
+        List<TranslateItem> list = buildTranslateItems(context, cursor);
+        if (ArrayUtils.isEmpty(list)) return false;
+
+        for (TranslateItem anItem : list) {
+            if (anItem.equals(translateItem)) return true;
+        }
+
+        cursor.close();
+
+        return false;
     }
 
     @SuppressWarnings("ConstantConditions")

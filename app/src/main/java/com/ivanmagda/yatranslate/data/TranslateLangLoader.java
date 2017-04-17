@@ -32,7 +32,7 @@ import android.support.v4.content.Loader;
 
 import static com.ivanmagda.yatranslate.data.TranslateContract.LanguageEntry;
 
-public final class TranslateLangDbLoader implements LoaderManager.LoaderCallbacks<Cursor> {
+public final class TranslateLangLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public interface CallbacksListener {
         void onFinishLangsQuery(Cursor cursor);
@@ -40,11 +40,11 @@ public final class TranslateLangDbLoader implements LoaderManager.LoaderCallback
         void onLangsLoaderReset();
     }
 
-    private Context mContext;
-    private CallbacksListener mCallbacksListener;
+    private final Context mContext;
+    private final CallbacksListener mCallbacksListener;
 
-    public TranslateLangDbLoader(@NonNull final Context context,
-                                 @NonNull final CallbacksListener callbacksListener) {
+    public TranslateLangLoader(@NonNull final Context context,
+                               @NonNull final CallbacksListener callbacksListener) {
         this.mContext = context;
         this.mCallbacksListener = callbacksListener;
     }

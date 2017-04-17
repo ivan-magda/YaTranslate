@@ -43,9 +43,9 @@ public final class TranslateHistoryLoader implements LoaderManager.LoaderCallbac
         void onHistoryLoaderReset();
     }
 
-    private Context mContext;
-    private CallbacksListener mCallbacksListener;
-    private BookmarkListFragment.ContentFilter mContentFilter;
+    private final Context mContext;
+    private final CallbacksListener mCallbacksListener;
+    private final BookmarkListFragment.ContentFilter mContentFilter;
 
     private String mQueryText = null;
 

@@ -43,8 +43,8 @@ public final class YandexLangLoader
         void onLangsLoaderReset();
     }
 
-    private Context mContext;
-    private CallbacksListener mCallbacksListener;
+    private final Context mContext;
+    private final CallbacksListener mCallbacksListener;
 
     public YandexLangLoader(@NonNull final Context context,
                             @NonNull final CallbacksListener callbacksListener) {

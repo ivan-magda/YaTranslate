@@ -31,12 +31,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class JsonUtils {
+final class JsonUtils {
 
     private static final String LOG_TAG = JsonUtils.class.getSimpleName();
 
     interface Parcelable<T> {
-        T parse(JSONObject jsonObject) throws JSONException;
+        T parse(JSONObject jsonObject);
     }
 
     private JsonUtils() {

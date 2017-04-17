@@ -33,7 +33,9 @@ import java.util.Objects;
  */
 public final class TranslateItem implements Parcelable {
 
-    private long mId = -1;
+    public static final int ID_NOT_FOUND = -1;
+
+    private long mId = ID_NOT_FOUND;
     private boolean mIsFavorite = false;
 
     private String mTextToTranslate;

@@ -37,7 +37,7 @@ import android.widget.ProgressBar;
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter;
 import com.ivanmagda.yatranslate.api.YandexLangLoader;
-import com.ivanmagda.yatranslate.data.TranslateLangDbLoader;
+import com.ivanmagda.yatranslate.data.TranslateLangLoader;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
 import com.ivanmagda.yatranslate.model.SelectLangListItemComparator;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
@@ -64,7 +64,7 @@ import static com.ivanmagda.yatranslate.Extras.EXTRA_SELECT_LANGUAGE_RESULT;
 import static com.ivanmagda.yatranslate.adapter.TranslateLanguagesAdapter.ListItemClickListener;
 
 public class SelectLanguageActivity extends AppCompatActivity implements ListItemClickListener,
-        YandexLangLoader.CallbacksListener, TranslateLangDbLoader.CallbacksListener {
+        YandexLangLoader.CallbacksListener, TranslateLangLoader.CallbacksListener {
 
     /**
      * Defines how and what languages will be selected.
@@ -119,7 +119,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
     /**
      * Supported languages database loader.
      */
-    TranslateLangDbLoader mLangDbLoader;
+    TranslateLangLoader mLangDbLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +153,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements ListIte
         });
 
         mLangApiLoader = new YandexLangLoader(this, this);
-        mLangDbLoader = new TranslateLangDbLoader(this, this);
+        mLangDbLoader = new TranslateLangLoader(this, this);
     }
 
     @Override

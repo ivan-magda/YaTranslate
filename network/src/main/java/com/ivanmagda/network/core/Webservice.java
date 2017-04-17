@@ -38,7 +38,7 @@ import java.net.URL;
 public final class Webservice {
 
     /* Log tag for debug statements. */
-    private static String LOG_TAG = Webservice.class.getSimpleName();
+    private static final String LOG_TAG = Webservice.class.getSimpleName();
 
     /* HttpURLConnection configuration constants */
     private static final int READ_TIME_OUT = 10000;

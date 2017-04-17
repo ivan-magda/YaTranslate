@@ -37,7 +37,6 @@ import com.ivanmagda.yatranslate.fragment.BookmarkListFragment;
 import com.ivanmagda.yatranslate.fragment.TranslateFragment;
 import com.ivanmagda.yatranslate.model.TranslateFragmentState;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
-import com.ivanmagda.yatranslate.sync.YaTranslateSyncTask;
 import com.ivanmagda.yatranslate.sync.YaTranslateSyncUtils;
 
 import butterknife.BindView;

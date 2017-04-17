@@ -31,7 +31,7 @@ public final class Extras {
      * SelectLanguageActivity constants.
      */
     public static final String EXTRA_SELECT_LANGUAGE_ACTIVITY_MODE_KEY_TRANSFER = "com.ivanmagda.yatranslate.extra_select_lang_activity_mode";
-    public static final String EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER = "com.ivanmagda.yatranslate.extra_lang_item_tarnsfer";
+    public static final String EXTRA_CURRENT_LANGUAGE_ITEM_TRANSFER = "com.ivanmagda.yatranslate.extra_lang_item_transfer";
     public static final String EXTRA_SELECT_LANGUAGE_RESULT = "com.ivanmagda.yatranslate.extra_select_lang_result";
 
     private Extras() {

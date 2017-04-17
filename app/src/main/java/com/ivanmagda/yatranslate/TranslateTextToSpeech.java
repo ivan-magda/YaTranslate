@@ -44,8 +44,8 @@ public final class TranslateTextToSpeech implements TextToSpeech.OnInitListener 
     /**
      * The TextToSpeech engine.
      */
-    private TextToSpeech mTextToSpeech;
-    private OnInitListener mListener;
+    private final TextToSpeech mTextToSpeech;
+    private final OnInitListener mListener;
 
     private boolean mIsOk = false;
     private boolean mIsInitialized = false;

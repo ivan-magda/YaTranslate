@@ -37,7 +37,8 @@ public final class TranslateLangItem implements Parcelable {
     private String mFromLangName;
     private String mToLangName;
 
-    public static TranslateLangItem defaultItem = new TranslateLangItem("ru", "en", "Russian", "English");
+    public static final TranslateLangItem defaultItem =
+            new TranslateLangItem("ru", "en", "Russian", "English");
 
     public TranslateLangItem(@NonNull final String lang,
                              @NonNull final String fromLangName,

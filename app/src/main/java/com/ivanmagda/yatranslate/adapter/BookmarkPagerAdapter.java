@@ -14,7 +14,7 @@ public final class BookmarkPagerAdapter extends FragmentPagerAdapter {
     private static final int HISTORY_PAGE = 0;
     private static final int FAVORITES_PAGE = 1;
 
-    private Context mContext;
+    private final Context mContext;
 
     public BookmarkPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
