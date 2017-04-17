@@ -34,7 +34,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,7 +109,7 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
     /**
      * The SearchView.
      */
-    SearchView mSearchView;
+    private SearchView mSearchView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -170,7 +170,9 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
         inflater.inflate(R.menu.bookmark, menu);
 
         final MenuItem menuItem = menu.findItem(R.id.action_search);
+
         mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        mSearchView.setQueryHint(getString(R.string.hint_search_history));
         mSearchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -182,6 +184,7 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 setItemsVisibility(menu, menuItem, true);
+                queryForText(null);
                 return true;
             }
         });
@@ -223,10 +226,14 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
         mTranslateHistoryAdapter.swapCursor(cursor);
 
         mEmptyTextView.setVisibility(cursor.getCount() == 0 ? View.VISIBLE : View.INVISIBLE);
-        mEmptyTextView.setText((mContentFilter == ContentFilter.ALL
-                ? R.string.tv_empty_history
-                : R.string.tv_empty_favorite)
-        );
+        if (TextUtils.isEmpty(mTranslateHistoryLoader.getQuery())) {
+            mEmptyTextView.setText((mContentFilter == ContentFilter.ALL
+                    ? R.string.tv_empty_history
+                    : R.string.tv_empty_favorite)
+            );
+        } else {
+            mEmptyTextView.setText(R.string.tv_empty_history_search);
+        }
     }
 
     /**
@@ -252,12 +259,13 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.d("TEST", "Query: " + query);
+        queryForText(query);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        queryForText(newText);
         return false;
     }
 
@@ -282,5 +290,10 @@ public class BookmarkListFragment extends Fragment implements TranslateHistoryLo
                 .setNegativeButton(android.R.string.no, null)
                 .setIcon(R.drawable.ic_delete_holo_light)
                 .show();
+    }
+
+    private void queryForText(String queryString) {
+        mTranslateHistoryLoader.setQuery(queryString);
+        getLoaderManager().restartLoader(ID_HISTORY_LOADER, null, mTranslateHistoryLoader);
     }
 }

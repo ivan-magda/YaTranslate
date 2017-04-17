@@ -34,14 +34,11 @@ import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
-import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
 import com.ivanmagda.yatranslate.viewmodel.TranslateItemViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.ivanmagda.yatranslate.data.TranslateContract.HistoryEntry;
 
 public class TranslateHistoryAdapter
         extends RecyclerView.Adapter<TranslateHistoryAdapter.TranslateHistoryAdapterViewHolder> {
@@ -111,7 +108,12 @@ public class TranslateHistoryAdapter
     }
 
     public void swapCursor(Cursor cursor) {
+        if (mCursor != null) {
+            mCursor.close();
+        }
+
         mCursor = cursor;
+
         notifyDataSetChanged();
     }
 

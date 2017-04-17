@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.fragment.BookmarkListFragment;
 
@@ -46,6 +47,8 @@ public final class TranslateHistoryLoader implements LoaderManager.LoaderCallbac
     private CallbacksListener mCallbacksListener;
     private BookmarkListFragment.ContentFilter mContentFilter;
 
+    private String mQueryText = null;
+
     public TranslateHistoryLoader(@NonNull final Context context,
                                   @NonNull final BookmarkListFragment.ContentFilter contentFilter,
                                   @NonNull final CallbacksListener callbacksListener) {
@@ -54,12 +57,28 @@ public final class TranslateHistoryLoader implements LoaderManager.LoaderCallbac
         this.mCallbacksListener = callbacksListener;
     }
 
+    public void setQuery(String queryText) {
+        this.mQueryText = TextUtils.isEmpty(queryText) ? "" : queryText;
+    }
+
+    public String getQuery() {
+        return mQueryText;
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         /* URI for all rows of translate history data in our history table */
-        Uri historyQueryUri = HistoryEntry.CONTENT_URI;
+        Uri historyQueryUri;
+
+        if (!TextUtils.isEmpty(mQueryText)) {
+            historyQueryUri = HistoryEntry.buildUriWithText(mQueryText);
+        } else {
+            historyQueryUri = HistoryEntry.CONTENT_URI;
+        }
+
         /* Sort order: Descending by creation date */
         String sortOrder = HistoryEntry.COLUMN_CREATED_AT + " DESC";
+
         /*A SELECTION that declares which rows we'd like to return. */
         String selection = null;
 

@@ -39,8 +39,6 @@ import java.util.List;
 
 public final class YandexTranslateApi {
 
-    private static final String LOG_TAG = YandexTranslateApi.class.getSimpleName();
-
     // TODO: Replace Yandex Translate API Key with your own.
     private static final String API_KEY = "REPLACE_WITH_YOUR_OWN_API_KEY";
     private static final String API_SCHEME = "https";
