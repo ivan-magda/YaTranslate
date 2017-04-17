@@ -35,7 +35,7 @@ public final class GenericAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
      * Helper interface, that controls whether to start loading.
      */
     public interface OnStartLoadingCondition {
-        public boolean isMeetConditions(Resource<?> resource);
+        boolean isMeetConditions(Resource<?> resource);
     }
 
     private Resource<T> mResource;

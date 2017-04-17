@@ -35,7 +35,7 @@ import java.net.URL;
 public final class Resource<A> {
 
     public interface Parse<Result> {
-        public Result parse(@Nullable String response);
+        Result parse(@Nullable String response);
     }
 
     public URL url;
