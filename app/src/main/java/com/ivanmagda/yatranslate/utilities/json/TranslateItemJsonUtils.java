@@ -20,46 +20,52 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils.json;
+package com.ivanmagda.yatranslate.utilities.json;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility functions to handle Yandex Translate supported languages JSON data.
+ * Utility functions to handle Yandex Translate translate query JSON data.
  */
-public final class TranslateLangItemJsonUtils {
+public final class TranslateItemJsonUtils {
 
     /* Response keys. */
-    private static final String DIRS_RESPONSE_KEY = "dirs";
-    private static final String LANGS_RESPONSE_KEY = "langs";
+    private static final String RESPONSE_CODE_KEY = "code";
+    private static final String LANG_RESPONSE_KEY = "lang";
+    private static final String TEXT_RESPONSE_KEY = "text";
 
-    private TranslateLangItemJsonUtils() {
+    private TranslateItemJsonUtils() {
     }
 
-    public static List<TranslateLangItem> buildFromResponse(@Nullable String response) {
+    public static List<TranslateItem> buildItems(
+            @NonNull final String textToTranslate,
+            @NonNull final TranslateLangItem translateLangItem,
+            @Nullable String response) {
         if (TextUtils.isEmpty(response)) {
             return null;
         }
 
         try {
             JSONObject json = new JSONObject(response);
-            JSONArray dirs = json.getJSONArray(DIRS_RESPONSE_KEY);
-            JSONObject langs = json.getJSONObject(LANGS_RESPONSE_KEY);
 
-            if (dirs == null || langs == null) return null;
-
-            return parse(dirs, langs);
+            int responseCode = json.getInt(RESPONSE_CODE_KEY);
+            if (responseCode >= HttpURLConnection.HTTP_OK || responseCode <= 299) {
+                return parseTranslatedWords(textToTranslate, translateLangItem,
+                        json.getJSONArray(TEXT_RESPONSE_KEY));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -67,22 +73,19 @@ public final class TranslateLangItemJsonUtils {
         return null;
     }
 
-    private static List<TranslateLangItem> parse(JSONArray dirs, JSONObject langs) throws JSONException {
-        ArrayList<TranslateLangItem> parsedItems = new ArrayList<>(dirs.length());
+    private static List<TranslateItem> parseTranslatedWords(
+            @NonNull final String textToTranslate,
+            @NonNull final TranslateLangItem langItem,
+            @Nullable final JSONArray translatedWords) throws JSONException {
+        if (translatedWords == null || translatedWords.length() == 0) return null;
 
-        for (int i = 0; i < dirs.length(); i++) {
-            String langDir = dirs.getString(i);
-
-            String fromLang = TranslateLangUtils.getFromLangName(langDir);
-            String toLang = TranslateLangUtils.getToLangName(langDir);
-            String fromName = langs.getString(fromLang);
-            String toName = langs.getString(toLang);
-
-            parsedItems.add(new TranslateLangItem(fromLang, toLang, fromName, toName));
+        List<TranslateItem> translatedItems = new ArrayList<>(translatedWords.length());
+        for (int i = 0; i < translatedWords.length(); i++) {
+            String translateText = translatedWords.getString(i);
+            translatedItems.add(new TranslateItem(textToTranslate, translateText, langItem));
         }
 
-        return parsedItems;
+        return translatedItems;
     }
 
 }
-

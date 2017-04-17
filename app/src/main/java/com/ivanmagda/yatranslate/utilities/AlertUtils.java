@@ -20,23 +20,22 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utilities;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
-public final class ListSortUtils {
+public final class AlertUtils {
 
-    private ListSortUtils() {
+    private AlertUtils() {
     }
 
-    public static void caseInsensitiveSort(List<String> list) {
-        Collections.sort(list, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareToIgnoreCase(o2);
-            }
-        });
+    public static void showToast(@NonNull final Context context, final int stringResourceId) {
+        Toast.makeText(context, stringResourceId, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showToast(@NonNull final Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -29,7 +29,7 @@ import android.text.TextUtils;
 
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.ArrayUtils;
+import com.ivanmagda.yatranslate.utilities.ArrayUtils;
 
 import java.util.List;
 

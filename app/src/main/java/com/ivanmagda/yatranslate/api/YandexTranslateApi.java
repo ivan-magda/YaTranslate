@@ -31,8 +31,8 @@ import com.ivanmagda.network.helper.MethodParameters;
 import com.ivanmagda.network.helper.UrlBuilder;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.json.TranslateItemJsonUtils;
-import com.ivanmagda.yatranslate.utils.json.TranslateLangItemJsonUtils;
+import com.ivanmagda.yatranslate.utilities.json.TranslateItemJsonUtils;
+import com.ivanmagda.yatranslate.utilities.json.TranslateLangItemJsonUtils;
 
 import java.net.URL;
 import java.util.List;

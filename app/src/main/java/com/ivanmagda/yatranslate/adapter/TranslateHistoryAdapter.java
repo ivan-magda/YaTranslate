@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
-import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
+import com.ivanmagda.yatranslate.utilities.database.TranslateItemDbUtils;
 import com.ivanmagda.yatranslate.viewmodel.TranslateItemViewModel;
 
 import butterknife.BindView;

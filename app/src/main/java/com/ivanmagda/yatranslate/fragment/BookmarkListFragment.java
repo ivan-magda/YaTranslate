@@ -47,7 +47,7 @@ import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.adapter.TranslateHistoryAdapter;
 import com.ivanmagda.yatranslate.data.TranslateHistoryLoader;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
-import com.ivanmagda.yatranslate.utils.database.TranslateItemDbUtils;
+import com.ivanmagda.yatranslate.utilities.database.TranslateItemDbUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

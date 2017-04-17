@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utilities;
 
 import android.support.annotation.Nullable;
 

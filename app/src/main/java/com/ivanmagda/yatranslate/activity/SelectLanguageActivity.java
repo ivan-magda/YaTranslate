@@ -41,11 +41,11 @@ import com.ivanmagda.yatranslate.data.TranslateLangDbLoader;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
 import com.ivanmagda.yatranslate.model.SelectLangListItemComparator;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.ArrayUtils;
-import com.ivanmagda.yatranslate.utils.MapUtils;
-import com.ivanmagda.yatranslate.utils.MapUtils.OnFilterCondition;
-import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
-import com.ivanmagda.yatranslate.utils.database.TranslateLangDbUtils;
+import com.ivanmagda.yatranslate.utilities.ArrayUtils;
+import com.ivanmagda.yatranslate.utilities.MapUtils;
+import com.ivanmagda.yatranslate.utilities.MapUtils.OnFilterCondition;
+import com.ivanmagda.yatranslate.utilities.TranslateLangUtils;
+import com.ivanmagda.yatranslate.utilities.database.TranslateLangDbUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

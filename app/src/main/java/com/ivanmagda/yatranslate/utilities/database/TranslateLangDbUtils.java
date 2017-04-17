@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils.database;
+package com.ivanmagda.yatranslate.utilities.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,7 +29,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
-import com.ivanmagda.yatranslate.utils.ArrayUtils;
+import com.ivanmagda.yatranslate.utilities.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,44 +20,23 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils.json;
+package com.ivanmagda.yatranslate.utilities;
 
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public final class JsonUtils {
+public final class ListSortUtils {
 
-    private static final String LOG_TAG = JsonUtils.class.getSimpleName();
-
-    interface Parcelable<T> {
-        T parse(JSONObject jsonObject) throws JSONException;
+    private ListSortUtils() {
     }
 
-    private JsonUtils() {
-    }
-
-    public static <T> List<T> parseJsonArray(JSONArray jsonArray, Parcelable<T> parcelable)
-            throws JSONException {
-        ArrayList<T> parsedArray = new ArrayList<>(jsonArray.length());
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            T parsed = parcelable.parse(jsonObject);
-
-            if (parsed != null) {
-                parsedArray.add(parsed);
-            } else {
-                Log.e(LOG_TAG, "Failed to parse JSONObject: " + jsonObject);
+    public static void caseInsensitiveSort(List<String> list) {
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareToIgnoreCase(o2);
             }
-        }
-
-        return parsedArray;
+        });
     }
-
 }

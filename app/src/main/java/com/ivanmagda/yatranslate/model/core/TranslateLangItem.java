@@ -27,7 +27,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.ivanmagda.yatranslate.utils.TranslateLangUtils;
+import com.ivanmagda.yatranslate.utilities.TranslateLangUtils;
 
 public final class TranslateLangItem implements Parcelable {
 

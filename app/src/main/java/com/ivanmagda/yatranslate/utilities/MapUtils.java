@@ -20,22 +20,32 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utilities;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.widget.Toast;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class AlertUtils {
+public final class MapUtils {
 
-    private AlertUtils() {
+    public interface OnFilterCondition<K, V> {
+        boolean isMeetCondition(K key, V value);
     }
 
-    public static void showToast(@NonNull final Context context, final int stringResourceId) {
-        Toast.makeText(context, stringResourceId, Toast.LENGTH_SHORT).show();
+    public static <K, V> Map<K, V> filter(Map<K, V> map, OnFilterCondition condition) {
+        if (map == null) return null;
+        if (map.size() == 0) return map;
+
+        Map<K, V> filteredMap = new HashMap<>(map.size());
+
+        for (Map.Entry<K, V> anEntry : map.entrySet()) {
+            if (condition.isMeetCondition(anEntry.getKey(), anEntry.getValue())) {
+                filteredMap.put(anEntry.getKey(), anEntry.getValue());
+            }
+        }
+
+        return filteredMap;
     }
 
-    public static void showToast(@NonNull final Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    private MapUtils() {
     }
 }

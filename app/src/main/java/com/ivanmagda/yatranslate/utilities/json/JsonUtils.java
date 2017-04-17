@@ -20,32 +20,44 @@
  * THE SOFTWARE.
  */
 
-package com.ivanmagda.yatranslate.utils;
+package com.ivanmagda.yatranslate.utilities.json;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.util.Log;
 
-public final class MapUtils {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    public interface OnFilterCondition<K, V> {
-        boolean isMeetCondition(K key, V value);
+import java.util.ArrayList;
+import java.util.List;
+
+public final class JsonUtils {
+
+    private static final String LOG_TAG = JsonUtils.class.getSimpleName();
+
+    interface Parcelable<T> {
+        T parse(JSONObject jsonObject) throws JSONException;
     }
 
-    public static <K, V> Map<K, V> filter(Map<K, V> map, OnFilterCondition condition) {
-        if (map == null) return null;
-        if (map.size() == 0) return map;
+    private JsonUtils() {
+    }
 
-        Map<K, V> filteredMap = new HashMap<>(map.size());
+    public static <T> List<T> parseJsonArray(JSONArray jsonArray, Parcelable<T> parcelable)
+            throws JSONException {
+        ArrayList<T> parsedArray = new ArrayList<>(jsonArray.length());
 
-        for (Map.Entry<K, V> anEntry : map.entrySet()) {
-            if (condition.isMeetCondition(anEntry.getKey(), anEntry.getValue())) {
-                filteredMap.put(anEntry.getKey(), anEntry.getValue());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            T parsed = parcelable.parse(jsonObject);
+
+            if (parsed != null) {
+                parsedArray.add(parsed);
+            } else {
+                Log.e(LOG_TAG, "Failed to parse JSONObject: " + jsonObject);
             }
         }
 
-        return filteredMap;
+        return parsedArray;
     }
 
-    private MapUtils() {
-    }
 }

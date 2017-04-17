@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.ivanmagda.yatranslate.R;
 import com.ivanmagda.yatranslate.model.SelectLangListItem;
-import com.ivanmagda.yatranslate.utils.ArrayUtils;
+import com.ivanmagda.yatranslate.utilities.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
