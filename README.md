@@ -19,6 +19,12 @@ YaTranslate has the following functionality:
 
 For more information about how to use Yandex.Translate API and how to get your own API key follow this [link](https://tech.yandex.ru/translate/).
 
+## Screenshots
+
+<img src="https://github.com/vanyaland/YaTranslate/blob/master/screenshots/translate.png" width="280" height="498">
+<img src="https://github.com/vanyaland/YaTranslate/blob/master/screenshots/bookmark.png" width="280" height="498">
+<img src="https://github.com/vanyaland/YaTranslate/blob/master/screenshots/search.png" width="280" height="498">
+
 ## Author
 I'm [Ivan Magda](https://www.facebook.com/ivan.magda).
 Email: [imagda15@gmail.com](mailto:imagda15@gmail.com).
