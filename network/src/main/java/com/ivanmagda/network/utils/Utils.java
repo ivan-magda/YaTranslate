@@ -26,7 +26,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public final class Utils {
+
+    private static final String UTF8 = "utf-8";
 
     private Utils() {
     }
@@ -37,5 +42,13 @@ public final class Utils {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static String urlEncode(String str) {
+        try {
+            return URLEncoder.encode(str, UTF8);
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("Failed to encode", e);
+        }
     }
 }

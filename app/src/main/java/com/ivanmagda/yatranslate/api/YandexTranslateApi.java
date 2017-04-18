@@ -29,6 +29,7 @@ import com.ivanmagda.network.core.Resource;
 import com.ivanmagda.network.core.Resource.Parse;
 import com.ivanmagda.network.helper.MethodParameters;
 import com.ivanmagda.network.helper.UrlBuilder;
+import com.ivanmagda.network.utils.Utils;
 import com.ivanmagda.yatranslate.model.core.TranslateItem;
 import com.ivanmagda.yatranslate.model.core.TranslateLangItem;
 import com.ivanmagda.yatranslate.utilities.json.TranslateItemJsonUtils;
@@ -48,7 +49,7 @@ public final class YandexTranslateApi {
     private static final String API_KEY_PARAM = "key";
     private static final String UI_LANGUAGE_KEY_PARAM = "ui";
     private static final String TEXT_KEY_PARAM = "text";
-    private static final String TRANSLATE_DIRECTION_KEY_PARAM = "lang";
+    private static final String TRANSLATE_DIR_KEY_PARAM = "lang";
 
     private static final String SUPPORTED_LANGUAGES_PATH = "getLangs";
     private static final String TRANSLATE_PATH = "translate";
@@ -73,8 +74,8 @@ public final class YandexTranslateApi {
     public static Resource<List<TranslateItem>> getTranslation(@NonNull final String text,
                                                                @NonNull final TranslateLangItem translateLang) {
         MethodParameters parameters = getDefaultMethodParameters();
-        parameters.put(TEXT_KEY_PARAM, text);
-        parameters.put(TRANSLATE_DIRECTION_KEY_PARAM, translateLang.getLangString());
+        parameters.put(TEXT_KEY_PARAM, Utils.urlEncode(text));
+        parameters.put(TRANSLATE_DIR_KEY_PARAM, translateLang.getLangString());
 
         URL url = buildUrl(TRANSLATE_PATH, parameters);
 
