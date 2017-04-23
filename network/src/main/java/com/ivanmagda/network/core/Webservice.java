@@ -58,10 +58,6 @@ public final class Webservice {
         HttpURLConnection connection = null;
         URL url = resource.url;
 
-        if (url == null) {
-            return null;
-        }
-
         try {
             connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(READ_TIME_OUT);
@@ -113,12 +109,16 @@ public final class Webservice {
 
         // Reading each line of the data.
         String line;
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line).append("\n");
+        try {
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            reader.close();
+            inputStream.close();
         }
-
-        reader.close();
-        inputStream.close();
 
         return stringBuilder.toString();
     }
