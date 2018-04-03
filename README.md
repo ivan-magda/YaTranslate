@@ -1,5 +1,6 @@
 # YaTranslate
 
+[![codebeat badge](https://codebeat.co/badges/6ffac324-54f0-4470-ba9e-fbc7671ab4c6)](https://codebeat.co/projects/github-com-vanyaland-yatranslate-master)
 ![License](https://img.shields.io/npm/l/express.svg)
 
 ## Description
